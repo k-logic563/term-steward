@@ -81,7 +81,7 @@ final class PlanningPanel {
 		}
 		?>
 		<?php $render_pagination( 'top' ); ?>
-		<div class="term-steward-table-scroll" tabindex="0" role="region" aria-label="<?php echo esc_attr__( 'カテゴリー・タグ一覧', 'term-steward' ); ?>">
+		<div class="term-steward-table-scroll" tabindex="0" role="region" aria-label="<?php echo esc_attr__( 'Category and tag list', 'term-steward' ); ?>">
 		<table class="wp-list-table widefat fixed striped term-steward-inventory-table">
 			<thead><tr>
 				<td class="manage-column check-column"><input type="checkbox" class="term-steward-select-page" aria-label="<?php echo esc_attr__( 'Select all terms on this page', 'term-steward' ); ?>"></td>
@@ -211,14 +211,14 @@ final class PlanningPanel {
 								<?php $this->render_field_errors( $field_errors, 'selection', 'term-steward-merge-source-error' ); ?>
 							<?php endif; ?>
 						</div>
-						<div id="term-steward-merge-destination-group" class="term-steward-field-group" data-cleared="<?php echo esc_attr__( '選択していた統合先が統合元に含まれたため、選択を解除しました。', 'term-steward' ); ?>">
+						<div id="term-steward-merge-destination-group" class="term-steward-field-group" data-cleared="<?php echo esc_attr__( 'The selected destination became a source, so the destination was cleared.', 'term-steward' ); ?>">
 							<label class="term-steward-field-label" for="term-steward-destination"><?php echo esc_html__( 'Merge destination', 'term-steward' ); ?></label>
 							<select class="term-steward-field-control tt-control" id="term-steward-destination" name="destination" aria-describedby="term-steward-destination-help term-steward-destination-selection-notice<?php echo isset( $field_errors['destination'] ) ? ' ' . esc_attr( $this->field_error_ids( $field_errors, 'destination', 'term-steward-destination-error' ) ) : ''; ?>" <?php echo isset( $field_errors['destination'] ) ? 'aria-invalid="true"' : ''; ?> <?php echo 'destination' === $focus ? 'data-error-focus="true"' : ''; ?>>
 								<option value=""><?php echo esc_html__( 'Select a merge destination.', 'term-steward' ); ?></option>
 								<?php $this->render_destinations( $taxonomy, $selected, (string) ( $input['destination'] ?? '' ) ); ?>
 							</select>
 							<p id="term-steward-destination-help" class="description term-steward-field-help"><?php echo esc_html__( 'Select an existing term in the same taxonomy.', 'term-steward' ); ?></p>
-							<p id="term-steward-destination-selection-notice" class="description term-steward-field-help" role="status" <?php echo $destination_removed ? '' : 'hidden'; ?>><?php echo esc_html__( '選択していた統合先が統合元に含まれたため、選択を解除しました。', 'term-steward' ); ?></p>
+							<p id="term-steward-destination-selection-notice" class="description term-steward-field-help" role="status" <?php echo $destination_removed ? '' : 'hidden'; ?>><?php echo esc_html__( 'The selected destination became a source, so the destination was cleared.', 'term-steward' ); ?></p>
 							<?php $this->render_field_errors( $field_errors, 'destination', 'term-steward-destination-error' ); ?>
 						</div>
 					</div>
@@ -244,7 +244,7 @@ final class PlanningPanel {
 				</section>
 
 				<div class="term-steward-process-actions">
-					<button type="submit" class="button button-primary tt-button tt-button--primary" name="plan_command" value="add"><?php echo esc_html__( '計画に追加', 'term-steward' ); ?></button>
+					<button type="submit" class="button button-primary tt-button tt-button--primary" name="plan_command" value="add"><?php echo esc_html__( 'Add to plan', 'term-steward' ); ?></button>
 				</div>
 			</div>
 		</details>
@@ -355,7 +355,7 @@ final class PlanningPanel {
 		?>
 		<div class="term-steward term-steward-modal" data-auto-open="<?php echo $auto_open ? '1' : '0'; ?>" hidden>
 			<div class="term-steward-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="term-steward-preview-heading" tabindex="-1">
-			<header class="term-steward-modal__header"><h2 id="term-steward-preview-heading"><?php echo esc_html__( 'Change preview', 'term-steward' ); ?></h2><button type="button" class="term-steward-modal__close" aria-label="<?php echo esc_attr__( '閉じる', 'term-steward' ); ?>">&times;</button></header>
+			<header class="term-steward-modal__header"><h2 id="term-steward-preview-heading"><?php echo esc_html__( 'Change preview', 'term-steward' ); ?></h2><button type="button" class="term-steward-modal__close" aria-label="<?php echo esc_attr__( 'Close', 'term-steward' ); ?>">&times;</button></header>
 			<div class="term-steward-modal__body">
 			<?php if ( false === ( $operation['preview_current'] ?? true ) ) : ?>
 				<p class="term-steward-message term-steward-message--error" role="alert"><strong><?php echo esc_html__( 'Error', 'term-steward' ); ?>:</strong> <?php echo esc_html( ErrorMessages::label( PlanErrorCode::STALE_PREVIEW ) ); ?></p>
@@ -365,17 +365,17 @@ final class PlanningPanel {
 					<h3><?php echo esc_html( $this->action_label( (string) $item['action'] ) ); ?></h3>
 					<p><strong><?php echo esc_html__( 'Targets', 'term-steward' ); ?>:</strong> <?php echo esc_html( implode( '、', array_column( $item['sources'], 'name' ) ) ); ?></p>
 					<?php if ( Action::DELETE->value !== $item['action'] ) : ?>
-						<p><strong><?php echo esc_html__( '変更後', 'term-steward' ); ?>:</strong> <?php echo esc_html( Action::MERGE->value === $item['action'] ? (string) ( $item['destination']['name'] ?? '' ) : (string) $item['new_name'] ); ?></p>
+						<p><strong><?php echo esc_html__( 'After change', 'term-steward' ); ?>:</strong> <?php echo esc_html( Action::MERGE->value === $item['action'] ? (string) ( $item['destination']['name'] ?? '' ) : (string) $item['new_name'] ); ?></p>
 					<?php endif; ?>
 					<?php if ( Action::RENAME->value === $item['action'] && null !== $item['new_slug'] && (string) ( $item['sources'][0]['slug'] ?? '' ) !== (string) $item['new_slug'] ) : ?>
-						<p><strong><?php echo esc_html__( '変更後のslug', 'term-steward' ); ?>:</strong> <?php echo esc_html( (string) $item['new_slug'] ); ?></p>
+						<p><strong><?php echo esc_html__( 'New slug', 'term-steward' ); ?>:</strong> <?php echo esc_html( (string) $item['new_slug'] ); ?></p>
 					<?php endif; ?>
-					<p><?php /* translators: %d: number of affected published posts. */ echo esc_html( sprintf( __( '影響を受ける公開済み投稿：%d件', 'term-steward' ), count( $item['affected_posts'] ) ) ); ?></p>
+					<p><?php /* translators: %d: number of affected published posts. */ echo esc_html( sprintf( __( 'Affected published posts: %d', 'term-steward' ), count( $item['affected_posts'] ) ) ); ?></p>
 					<?php if ( Action::MERGE->value === $item['action'] ) : ?>
 						<?php foreach ( $item['sources'] as $source ) : ?>
-							<p><?php echo esc_html( (string) $source['name'] ); ?>：<?php echo esc_html( $source['delete_source'] ? __( '処理後に削除', 'term-steward' ) : __( '削除せず保持', 'term-steward' ) ); ?></p>
+							<p><?php echo esc_html( (string) $source['name'] ); ?>：<?php echo esc_html( $source['delete_source'] ? __( 'Delete after processing', 'term-steward' ) : __( 'Retain without deleting', 'term-steward' ) ); ?></p>
 							<?php if ( ! $source['delete_source'] ) : ?>
-								<p><?php echo esc_html__( '理由', 'term-steward' ); ?>：<?php echo esc_html( implode( ' ', array_map( array( $this, 'reason_label' ), $source['reasons'] ) ) ); ?></p>
+								<p><?php echo esc_html__( 'Reason', 'term-steward' ); ?>：<?php echo esc_html( implode( ' ', array_map( array( $this, 'reason_label' ), $source['reasons'] ) ) ); ?></p>
 							<?php endif; ?>
 						<?php endforeach; ?>
 					<?php endif; ?>
@@ -384,12 +384,12 @@ final class PlanningPanel {
 						<p class="term-steward-message term-steward-message--warning"><strong><?php echo esc_html__( 'Warning', 'term-steward' ); ?>:</strong> <?php echo esc_html( implode( ' ', array_map( array( $this, 'warning_label' ), $blocking_warnings ) ) ); ?></p>
 					<?php endif; ?>
 					<?php if ( array() !== $item['affected_posts'] ) : ?>
-						<details class="term-steward-preview-posts" data-item="<?php echo esc_attr( (string) $index ); ?>" data-operation="<?php echo esc_attr( (string) $operation['id'] ); ?>" data-taxonomy="<?php echo esc_attr( (string) $operation['taxonomy'] ); ?>" data-error="<?php echo esc_attr__( '対象投稿を取得できませんでした。', 'term-steward' ); ?>"><summary><?php /* translators: %d: number of affected published posts. */ echo esc_html( sprintf( __( '対象投稿を確認（%d件）', 'term-steward' ), count( $item['affected_posts'] ) ) ); ?></summary><ul></ul></details>
+						<details class="term-steward-preview-posts" data-item="<?php echo esc_attr( (string) $index ); ?>" data-operation="<?php echo esc_attr( (string) $operation['id'] ); ?>" data-taxonomy="<?php echo esc_attr( (string) $operation['taxonomy'] ); ?>" data-error="<?php echo esc_attr__( 'Could not retrieve the target posts.', 'term-steward' ); ?>"><summary><?php /* translators: %d: number of affected published posts. */ echo esc_html( sprintf( __( 'Review target posts (%d)', 'term-steward' ), count( $item['affected_posts'] ) ) ); ?></summary><ul></ul></details>
 					<?php endif; ?>
 				</article>
 			<?php endforeach; ?>
 			</div>
-			<footer class="term-steward-modal__footer"><button type="button" class="button tt-button tt-button--secondary term-steward-modal__cancel"><?php echo esc_html__( 'キャンセル', 'term-steward' ); ?></button><button type="submit" form="term-steward-planning-form" class="button button-primary tt-button tt-button--primary term-steward-modal__run" name="plan_command" value="run" <?php disabled( false === ( $operation['preview_current'] ?? true ) ); ?>><?php echo esc_html__( 'Execute', 'term-steward' ); ?></button><input type="hidden" name="operation_id" form="term-steward-planning-form" value="<?php echo esc_attr( (string) $operation['id'] ); ?>"></footer>
+			<footer class="term-steward-modal__footer"><button type="button" class="button tt-button tt-button--secondary term-steward-modal__cancel"><?php echo esc_html__( 'Cancel', 'term-steward' ); ?></button><button type="submit" form="term-steward-planning-form" class="button button-primary tt-button tt-button--primary term-steward-modal__run" name="plan_command" value="run" <?php disabled( false === ( $operation['preview_current'] ?? true ) ); ?>><?php echo esc_html__( 'Execute', 'term-steward' ); ?></button><input type="hidden" name="operation_id" form="term-steward-planning-form" value="<?php echo esc_attr( (string) $operation['id'] ); ?>"></footer>
 			</div>
 		</div>
 		<?php
@@ -711,7 +711,7 @@ final class PlanningPanel {
 		$names = array();
 		foreach ( $item['sources'] as $source ) {
 			$term    = get_term( (int) $source['term_id'], $taxonomy->value );
-			$names[] = $term instanceof WP_Term ? $term->name : __( '見つからない分類', 'term-steward' );
+			$names[] = $term instanceof WP_Term ? $term->name : __( 'Missing term', 'term-steward' );
 		}
 		return implode( ', ', $names );
 	}
@@ -820,12 +820,12 @@ final class PlanningPanel {
 	 */
 	private function parent_label( Taxonomy $taxonomy, mixed $parent_name ): string {
 		if ( Taxonomy::POST_TAG === $taxonomy ) {
-			return __( '対象外', 'term-steward' );
+			return __( 'Not applicable', 'term-steward' );
 		}
 
 		return is_string( $parent_name ) && '' !== $parent_name
 			? $parent_name
-			: __( 'なし', 'term-steward' );
+			: __( 'None', 'term-steward' );
 	}
 
 	/**
@@ -855,7 +855,7 @@ final class PlanningPanel {
 	private function notice_label( string $notice ): string {
 		return match ( $notice ) {
 			'execution_updated' => __( 'Execution progress was updated.', 'term-steward' ),
-			'plan_item_added'   => __( '操作計画に追加しました。', 'term-steward' ),
+			'plan_item_added'   => __( 'Added to the operation plan.', 'term-steward' ),
 			'plan_item_removed' => __( 'The process was removed from the plan.', 'term-steward' ),
 			'preview_created'   => __( 'The preview was created without changing WordPress data.', 'term-steward' ),
 			'preview_invalidated' => __( 'The previous preview was invalidated. You can now revise the plan.', 'term-steward' ),

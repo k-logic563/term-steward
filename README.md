@@ -84,7 +84,11 @@ Docker、Compose v2、`rsync`、`zip`、`shasum` が利用できる環境で次�
 make dist
 ```
 
-`dist/term-steward-0.1.0.zip` と対応する `.sha256` が生成されます。ビルドは隔離したステージへ本番ファイルだけをコピーし、`composer install --no-dev --prefer-dist --optimize-autoloader` で autoload を作成します。
+`dist/term-steward-0.1.1.zip` と対応する `.sha256` が生成されます。ビルドは隔離したステージへ本番ファイルだけをコピーし、`composer install --no-dev --prefer-dist --optimize-autoloader` で autoload を作成します。`composer.json`はWordPress.orgでソース構成を確認できるよう配布ZIPに含め、開発用dependencyを固定する`composer.lock`は含めません。
+
+## 翻訳
+
+配布ZIPに`.po`、`.mo`、`.pot`、`.l10n.php`は同梱しません。WordPress.org公開後の日本語翻訳はtranslate.wordpress.orgに登録し、WordPress.org Language Packとして配信する方針です。リポジトリ内の`languages/`は翻訳作業用の資産であり、`.distignore`と配布スクリプトの両方で配布対象外にしています。
 
 ## プラグインの有効化
 
@@ -111,7 +115,7 @@ docker compose run --rm wp-cli plugin status term-steward
 - マルチサイト全体の一括処理、Redo、CSV 入出力、定期実行、SEO リダイレクトには対応しません。
 - Undo は後から加えられた管理者の変更、削除済み投稿、名前・slug・親カテゴリーの競合を安全側で保持します。
 - プラグインを無効化または WordPress 管理画面から削除しても、操作履歴テーブル、Operation Item テーブル、Change Journal テーブル、DB schema version option はデータベースに残ります。監査記録、中断・復旧情報、再インストール後の履歴確認、誤操作時の復旧情報を保護するためです。
-- 0.1.0 には、これらのデータを完全削除する設定はありません。将来追加する可能性はありますが、現在は実装されていません。
+- 0.1.1 には、これらのデータを完全削除する設定はありません。将来追加する可能性はありますが、現在は実装されていません。
 - Term Steward は独立した`term_steward_*`永続化領域を使用します。旧開発名称に対応するテーブルやoptionは、別プラグインの所有物である可能性があるため、自動移行・読取・更新・削除しません。
 
 ## 不具合報告

@@ -42,7 +42,7 @@ docker compose --project-directory "$project_dir" run --rm --no-deps \
 	--no-interaction \
 	--no-progress
 
-rm -f "$plugin_dir/composer.json" "$plugin_dir/composer.lock"
+rm -f "$plugin_dir/composer.lock"
 
 for required_file in \
 	term-steward.php \
@@ -50,6 +50,7 @@ for required_file in \
 	README.md \
 	CHANGELOG.md \
 	LICENSE \
+	composer.json \
 	vendor/autoload.php
 do
 	test -f "$plugin_dir/$required_file"
@@ -79,7 +80,7 @@ if [ "$contributors" != "klogic563" ]; then
 fi
 
 if find "$plugin_dir" \
-	\( -name '.env*' -o -name '.git*' -o -name .github -o -name node_modules -o -name tests -o -name tools -o -name 'docker-compose*.yml' -o -name 'package*.json' -o -name 'playwright*' \) \
+	\( -name '.env*' -o -name '.git*' -o -name .github -o -name node_modules -o -name tests -o -name tools -o -name languages -o -name '*.po' -o -name '*.mo' -o -name '*.pot' -o -name '*.l10n.php' -o -name 'docker-compose*.yml' -o -name 'package*.json' -o -name 'playwright*' \) \
 	-print -quit | grep -q .; then
 	echo "The staged package contains a forbidden development file." >&2
 	exit 1

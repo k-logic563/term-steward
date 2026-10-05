@@ -94,19 +94,19 @@ final class Page {
 			'term-steward-history',
 			'termStewardHistory',
 			array(
-				'interrupted'     => __( '取り消し処理を中断しました。操作履歴から再開できます。', 'term-steward' ),
-				'cannotContinue'  => __( '取り消し処理を続行できませんでした。', 'term-steward' ),
-				'progressStopped' => __( 'サーバー側の進捗を確認できないため、取り消し処理を中断しました。操作履歴から再開できます。', 'term-steward' ),
-				'resultTitle'     => __( '取り消し結果', 'term-steward' ),
-				'stoppedTitle'    => __( '取り消しを中断しました', 'term-steward' ),
-				'closeResult'     => __( '閉じる', 'term-steward' ),
-				'showDetails'     => __( '詳しく見る', 'term-steward' ),
-				'collapse'        => __( '閉じる', 'term-steward' ),
-				'success'         => __( '成功：', 'term-steward' ),
-				'warning'         => __( '警告：', 'term-steward' ),
-				'failure'         => __( '失敗：', 'term-steward' ),
+				'interrupted'     => __( 'Undo was interrupted. You can resume it from operation history.', 'term-steward' ),
+				'cannotContinue'  => __( 'Undo could not continue.', 'term-steward' ),
+				'progressStopped' => __( 'Undo was interrupted because server progress could not be verified. Resume it from operation history.', 'term-steward' ),
+				'resultTitle'     => __( 'Undo result', 'term-steward' ),
+				'stoppedTitle'    => __( 'Undo interrupted', 'term-steward' ),
+				'closeResult'     => __( 'Close', 'term-steward' ),
+				'showDetails'     => __( 'View details', 'term-steward' ),
+				'collapse'        => __( 'Close', 'term-steward' ),
+				'success'         => __( 'Success: ', 'term-steward' ),
+				'warning'         => __( 'Warning: ', 'term-steward' ),
+				'failure'         => __( 'Failed: ', 'term-steward' ),
 				// translators: 1: processed count, 2: total count, 3: succeeded count, 4: failed count, 5: remaining count.
-				'progress'        => __( '進捗：%1$d / %2$d、成功：%3$d件、失敗：%4$d件、残り：%5$d件', 'term-steward' ),
+				'progress'        => __( 'Progress: %1$d / %2$d; successful: %3$d; failed: %4$d; remaining: %5$d', 'term-steward' ),
 			)
 		);
 	}
@@ -116,7 +116,7 @@ final class Page {
 	 */
 	public function preview_posts(): void {
 		if ( ! Access::current_user_can_access() ) {
-			wp_send_json_error( array( 'message' => __( 'アクセスできません。', 'term-steward' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'Access denied.', 'term-steward' ) ), 403 );
 		}
 		check_ajax_referer( PlanController::NONCE_ACTION, PlanController::NONCE_FIELD );
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified above.
@@ -125,15 +125,15 @@ final class Page {
 		$operation_id = absint( $request['operation_id'] ?? 0 );
 		$item_index   = isset( $request['item_index'] ) && is_scalar( $request['item_index'] ) && ctype_digit( (string) $request['item_index'] ) ? (int) $request['item_index'] : -1;
 		if ( null === $taxonomy || 0 === $operation_id || 0 > $item_index ) {
-			wp_send_json_error( array( 'message' => __( 'プレビューを確認できません。', 'term-steward' ) ), 400 );
+			wp_send_json_error( array( 'message' => __( 'The preview could not be verified.', 'term-steward' ) ), 400 );
 		}
 		$operation = ( new OperationRepository( $GLOBALS['wpdb'] ) )->find( $operation_id );
 		if ( null === $operation || get_current_user_id() !== (int) $operation['user_id'] || $operation['taxonomy'] !== $taxonomy->value || 'previewed' !== $operation['status'] ) {
-			wp_send_json_error( array( 'message' => __( 'プレビューを確認できません。', 'term-steward' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'The preview could not be verified.', 'term-steward' ) ), 403 );
 		}
 		$posts = $operation['requested_data']['preview']['items'][ $item_index ]['affected_posts'] ?? null;
 		if ( ! is_array( $posts ) ) {
-			wp_send_json_error( array( 'message' => __( '対象投稿を確認できません。', 'term-steward' ) ), 400 );
+			wp_send_json_error( array( 'message' => __( 'The target posts could not be verified.', 'term-steward' ) ), 400 );
 		}
 		wp_send_json_success( array( 'titles' => array_values( array_map( static fn( array $post ): string => (string) $post['title'], $posts ) ) ) );
 	}
@@ -143,7 +143,7 @@ final class Page {
 		if ( ! Access::current_user_can_access() ) {
 			wp_send_json_error(
 				array(
-					'message'   => __( 'アクセスできません。', 'term-steward' ),
+					'message'   => __( 'Access denied.', 'term-steward' ),
 					'retryable' => false,
 				),
 				403
@@ -156,7 +156,7 @@ final class Page {
 		if ( ! wp_verify_nonce( $nonce, HistoryPage::NONCE_ACTION ) ) {
 			wp_send_json_error(
 				array(
-					'message'   => __( 'セッションまたは認証情報が無効になりました。ページを再読み込みし、必要に応じて再ログインしてから操作を再開してください。', 'term-steward' ),
+					'message'   => __( 'Your session or credentials are no longer valid. Reload the page, sign in again if needed, and resume the operation.', 'term-steward' ),
 					'retryable' => false,
 				),
 				403
@@ -169,7 +169,7 @@ final class Page {
 		if ( 0 === $undo_id || null === $taxonomy ) {
 			wp_send_json_error(
 				array(
-					'message'   => __( '取り消し処理を確認できませんでした。', 'term-steward' ),
+					'message'   => __( 'The undo process could not be verified.', 'term-steward' ),
 					'retryable' => false,
 				),
 				400
@@ -190,7 +190,7 @@ final class Page {
 			$this->log_ajax_error( $exception );
 			wp_send_json_error(
 				array(
-					'message'   => __( '取り消し処理を中断しました。操作履歴から再開できます。', 'term-steward' ),
+					'message'   => __( 'Undo was interrupted. You can resume it from operation history.', 'term-steward' ),
 					'retryable' => false,
 				),
 				500
@@ -201,7 +201,7 @@ final class Page {
 	/** Returns one bounded, owner-scoped page of human-readable journal logs. */
 	public function history_logs(): void {
 		if ( ! Access::current_user_can_access() ) {
-			wp_send_json_error( array( 'message' => __( 'アクセスできません。', 'term-steward' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'Access denied.', 'term-steward' ) ), 403 );
 		}
 		check_ajax_referer( HistoryPage::NONCE_ACTION, HistoryPage::NONCE_FIELD );
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified above.
@@ -212,10 +212,10 @@ final class Page {
 		try {
 			wp_send_json_success( $this->history_service()->history_logs( $operation_id, get_current_user_id(), $page ) );
 		} catch ( \TermSteward\Application\Undo\UndoException $exception ) {
-			wp_send_json_error( array( 'message' => __( 'ログを確認できませんでした。', 'term-steward' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'The logs could not be verified.', 'term-steward' ) ), 403 );
 		} catch ( \Throwable $exception ) {
 			$this->log_ajax_error( $exception );
-			wp_send_json_error( array( 'message' => __( 'ログを取得できませんでした。もう一度お試しください。', 'term-steward' ) ), 500 );
+			wp_send_json_error( array( 'message' => __( 'Could not retrieve the logs. Try again.', 'term-steward' ) ), 500 );
 		}
 	}
 
@@ -237,13 +237,13 @@ final class Page {
 	 */
 	private function undo_error_message( string $code ): string {
 		return match ( $code ) {
-			UndoErrorCode::LOCKED => __( '別の処理が実行中です。操作履歴から状態を確認してください。', 'term-steward' ),
-			UndoErrorCode::STALE_PREVIEW => __( '確認後に状態が変わったため、取り消しを開始しませんでした。もう一度確認してください。', 'term-steward' ),
-			UndoErrorCode::IN_PROGRESS => __( 'すでに取り消し処理を実行中です。操作履歴から状態を確認してください。', 'term-steward' ),
-			UndoErrorCode::ALREADY_UNDONE => __( 'この操作はすでに取り消されています。', 'term-steward' ),
-			UndoErrorCode::NOT_RESUMABLE => __( 'この取り消し処理は完了状態のため再開できません。操作履歴で結果を確認してください。', 'term-steward' ),
-			UndoErrorCode::DUPLICATE => __( '複数の取り消し記録を検出したため、安全のため処理を開始しませんでした。', 'term-steward' ),
-			default => __( '取り消し処理を続行できませんでした。操作履歴から状態を確認してください。', 'term-steward' ),
+			UndoErrorCode::LOCKED => __( 'Another operation is running. Check its status in operation history.', 'term-steward' ),
+			UndoErrorCode::STALE_PREVIEW => __( 'The state changed after the preview, so undo did not start. Review it again.', 'term-steward' ),
+			UndoErrorCode::IN_PROGRESS => __( 'Undo is already running. Check its status in operation history.', 'term-steward' ),
+			UndoErrorCode::ALREADY_UNDONE => __( 'This operation has already been undone.', 'term-steward' ),
+			UndoErrorCode::NOT_RESUMABLE => __( 'This undo process is complete and cannot be resumed. Check the result in operation history.', 'term-steward' ),
+			UndoErrorCode::DUPLICATE => __( 'Multiple undo records were detected, so processing did not start.', 'term-steward' ),
+			default => __( 'Undo could not continue. Check its status in operation history.', 'term-steward' ),
 		};
 	}
 
@@ -292,11 +292,11 @@ final class Page {
 			?>
 			<div class="wrap term-steward term-steward-screen">
 				<h1><?php echo esc_html__( 'Term Steward', 'term-steward' ); ?></h1>
-				<nav class="nav-tab-wrapper" aria-label="<?php echo esc_attr__( '表示タブ', 'term-steward' ); ?>">
-					<?php $this->render_tab( Taxonomy::CATEGORY, null, __( 'カテゴリー', 'term-steward' ) ); ?>
-					<?php $this->render_tab( Taxonomy::POST_TAG, null, __( 'タグ', 'term-steward' ) ); ?>
-					<?php $this->render_aux_tab( 'plan', $view, __( '操作計画', 'term-steward' ), $board->draft_count( get_current_user_id() ) ); ?>
-					<?php $this->render_aux_tab( 'history', $view, __( '操作履歴', 'term-steward' ) ); ?>
+				<nav class="nav-tab-wrapper" aria-label="<?php echo esc_attr__( 'Views', 'term-steward' ); ?>">
+					<?php $this->render_tab( Taxonomy::CATEGORY, null, __( 'Category', 'term-steward' ) ); ?>
+					<?php $this->render_tab( Taxonomy::POST_TAG, null, __( 'Tag', 'term-steward' ) ); ?>
+					<?php $this->render_aux_tab( 'plan', $view, __( 'Operation plan', 'term-steward' ), $board->draft_count( get_current_user_id() ) ); ?>
+					<?php $this->render_aux_tab( 'history', $view, __( 'Operation history', 'term-steward' ) ); ?>
 				</nav>
 				<?php if ( null !== $board_state ) : ?>
 					<?php $board->render( $board_state ); ?>
@@ -342,10 +342,10 @@ final class Page {
 		<div class="wrap term-steward term-steward-screen">
 			<h1><?php echo esc_html__( 'Term Steward', 'term-steward' ); ?></h1>
 			<nav class="nav-tab-wrapper" aria-label="<?php echo esc_attr__( 'Taxonomy views', 'term-steward' ); ?>">
-				<?php $this->render_tab( Taxonomy::CATEGORY, $taxonomy, __( 'カテゴリー', 'term-steward' ) ); ?>
-				<?php $this->render_tab( Taxonomy::POST_TAG, $taxonomy, __( 'タグ', 'term-steward' ) ); ?>
-				<?php $this->render_aux_tab( 'plan', '', __( '操作計画', 'term-steward' ), $board->draft_count( get_current_user_id() ) ); ?>
-				<?php $this->render_aux_tab( 'history', '', __( '操作履歴', 'term-steward' ) ); ?>
+				<?php $this->render_tab( Taxonomy::CATEGORY, $taxonomy, __( 'Category', 'term-steward' ) ); ?>
+				<?php $this->render_tab( Taxonomy::POST_TAG, $taxonomy, __( 'Tag', 'term-steward' ) ); ?>
+				<?php $this->render_aux_tab( 'plan', '', __( 'Operation plan', 'term-steward' ), $board->draft_count( get_current_user_id() ) ); ?>
+				<?php $this->render_aux_tab( 'history', '', __( 'Operation history', 'term-steward' ) ); ?>
 			</nav>
 
 			<h2><?php echo esc_html( $taxonomy_label ); ?></h2>
@@ -505,7 +505,7 @@ final class Page {
 		);
 		$accessible = null === $count ? $label : sprintf(
 			/* translators: 1: tab name, 2: number of draft items. */
-			__( '%1$s（%2$d件）', 'term-steward' ),
+			__( '%1$s (%2$d)', 'term-steward' ),
 			$label,
 			$count
 		);
@@ -686,25 +686,25 @@ final class Page {
 		$end       = min( $total, $page * $per_page );
 		?>
 		<div class="tablenav term-steward-table-nav term-steward-table-nav--<?php echo esc_attr( $position ); ?>">
-			<div class="term-steward-page-size"><label for="<?php echo esc_attr( $select_id ); ?>"><?php echo esc_html__( '表示件数', 'term-steward' ); ?></label><select class="tt-control" id="<?php echo esc_attr( $select_id ); ?>" name="per_page" form="<?php echo esc_attr( $form_id ); ?>">
+			<div class="term-steward-page-size"><label for="<?php echo esc_attr( $select_id ); ?>"><?php echo esc_html__( 'Items per page', 'term-steward' ); ?></label><select class="tt-control" id="<?php echo esc_attr( $select_id ); ?>" name="per_page" form="<?php echo esc_attr( $form_id ); ?>">
 				<?php foreach ( array( 20, 50, 100 ) as $option ) : ?>
-					<option value="<?php echo esc_attr( (string) $option ); ?>" <?php selected( $per_page, $option ); ?>><?php /* translators: %d: number of terms per page. */ echo esc_html( sprintf( __( '%d件', 'term-steward' ), $option ) ); ?></option>
+					<option value="<?php echo esc_attr( (string) $option ); ?>" <?php selected( $per_page, $option ); ?>><?php /* translators: %d: number of terms per page. */ echo esc_html( sprintf( __( '%d items', 'term-steward' ), $option ) ); ?></option>
 				<?php endforeach; ?>
-			</select><button type="submit" form="<?php echo esc_attr( $form_id ); ?>" class="button tt-button tt-button--secondary"><?php echo esc_html__( '適用', 'term-steward' ); ?></button></div>
+			</select><button type="submit" form="<?php echo esc_attr( $form_id ); ?>" class="button tt-button tt-button--secondary"><?php echo esc_html__( 'Apply', 'term-steward' ); ?></button></div>
 			<span class="term-steward-page-range">
 			<?php
 			if ( 0 === $total ) {
-				echo esc_html__( '該当する項目はありません', 'term-steward' );
+				echo esc_html__( 'No matching items', 'term-steward' );
 			} else {
 				/* translators: 1: filtered total, 2: first visible item, 3: last visible item. */
-				echo esc_html( sprintf( __( '全%1$s件中 %2$s〜%3$s件を表示', 'term-steward' ), number_format_i18n( $total ), number_format_i18n( $start ), number_format_i18n( $end ) ) );
+				echo esc_html( sprintf( __( 'Showing %2$s–%3$s of %1$s items', 'term-steward' ), number_format_i18n( $total ), number_format_i18n( $start ), number_format_i18n( $end ) ) );
 			}
 			?>
 			</span>
 			<?php if ( 1 < $pages ) : ?>
-				<nav class="tablenav-pages term-steward-pagination" aria-label="<?php echo esc_attr( 'top' === $position ? __( '一覧上部のページ移動', 'term-steward' ) : __( '一覧下部のページ移動', 'term-steward' ) ); ?>">
-					<?php $this->render_page_button( '<<', 1, __( '最初のページへ', 'term-steward' ), 1 === $page, $taxonomy, $search, $orderby, $order, $unused, $per_page ); ?>
-					<?php $this->render_page_button( '<', $page - 1, __( '前のページへ', 'term-steward' ), 1 === $page, $taxonomy, $search, $orderby, $order, $unused, $per_page ); ?>
+				<nav class="tablenav-pages term-steward-pagination" aria-label="<?php echo esc_attr( 'top' === $position ? __( 'Top pagination', 'term-steward' ) : __( 'Bottom pagination', 'term-steward' ) ); ?>">
+					<?php $this->render_page_button( '<<', 1, __( 'Go to the first page', 'term-steward' ), 1 === $page, $taxonomy, $search, $orderby, $order, $unused, $per_page ); ?>
+					<?php $this->render_page_button( '<', $page - 1, __( 'Go to the previous page', 'term-steward' ), 1 === $page, $taxonomy, $search, $orderby, $order, $unused, $per_page ); ?>
 					<?php
 					$previous = 0;
 					foreach ( $this->visible_pages( $page, $pages ) as $number ) {
@@ -715,17 +715,17 @@ final class Page {
 						}
 						if ( $number === $page ) {
 							?>
-							<span class="button tt-button tt-button--pagination term-steward-page-link term-steward-page-current" aria-current="page" aria-label="<?php /* translators: %d: current page number. */ echo esc_attr( sprintf( __( '%dページ目', 'term-steward' ), $number ) ); ?>"><?php echo esc_html( (string) $number ); ?></span>
+							<span class="button tt-button tt-button--pagination term-steward-page-link term-steward-page-current" aria-current="page" aria-label="<?php /* translators: %d: current page number. */ echo esc_attr( sprintf( __( 'Page %d', 'term-steward' ), $number ) ); ?>"><?php echo esc_html( (string) $number ); ?></span>
 							<?php
 						} else {
 							/* translators: %d: target page number. */
-							$this->render_page_button( (string) $number, $number, sprintf( __( '%dページへ', 'term-steward' ), $number ), false, $taxonomy, $search, $orderby, $order, $unused, $per_page );
+							$this->render_page_button( (string) $number, $number, sprintf( __( 'Go to page %d', 'term-steward' ), $number ), false, $taxonomy, $search, $orderby, $order, $unused, $per_page );
 						}
 						$previous = $number;
 					}
 					?>
-					<?php $this->render_page_button( '>', $page + 1, __( '次のページへ', 'term-steward' ), $page === $pages, $taxonomy, $search, $orderby, $order, $unused, $per_page ); ?>
-					<?php $this->render_page_button( '>>', $pages, __( '最後のページへ', 'term-steward' ), $page === $pages, $taxonomy, $search, $orderby, $order, $unused, $per_page ); ?>
+					<?php $this->render_page_button( '>', $page + 1, __( 'Go to the next page', 'term-steward' ), $page === $pages, $taxonomy, $search, $orderby, $order, $unused, $per_page ); ?>
+					<?php $this->render_page_button( '>>', $pages, __( 'Go to the last page', 'term-steward' ), $page === $pages, $taxonomy, $search, $orderby, $order, $unused, $per_page ); ?>
 				</nav>
 			<?php endif; ?>
 		</div>

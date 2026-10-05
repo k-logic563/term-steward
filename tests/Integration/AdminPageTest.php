@@ -121,7 +121,7 @@ final class AdminPageTest extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Action method', $output );
 		$this->assertStringContainsString( 'Changes', $output );
 		$this->assertStringContainsString( 'Notices and validation results', $output );
-		$this->assertStringContainsString( 'name="plan_command" value="add">計画に追加</button>', $output );
+		$this->assertStringContainsString( 'name="plan_command" value="add">Add to plan</button>', $output );
 		$this->assertStringContainsString( 'id="term-steward-merge-source-group" class="term-steward-field-group term-steward-readonly-field"', $output );
 		$this->assertStringContainsString( 'class="term-steward-field-display term-steward-merge-sources"', $output );
 		$this->assertStringContainsString( 'id="term-steward-merge-destination-group" class="term-steward-field-group"', $output );
@@ -337,7 +337,7 @@ final class AdminPageTest extends WP_UnitTestCase {
 		$this->page->render();
 		$output = (string) ob_get_clean();
 		$this->assertSame( 4, substr_count( $output, '<a class="nav-tab' ) );
-		$this->assertStringContainsString( 'aria-label="操作計画（2件）"', $output );
+		$this->assertStringContainsString( 'aria-label="Operation plan (2)"', $output );
 		$this->assertStringContainsString( 'class="nav-tab nav-tab-active"', $output );
 		$this->assertStringContainsString( 'Tab category renamed', $output );
 		$this->assertStringContainsString( 'Tab tag renamed', $output );
@@ -358,8 +358,8 @@ final class AdminPageTest extends WP_UnitTestCase {
 		ob_start();
 		$this->page->render();
 		$after_delete = (string) ob_get_clean();
-		$this->assertStringContainsString( 'aria-label="操作計画（1件）"', $after_delete );
-		$this->assertStringContainsString( '操作計画から削除しました。', $after_delete );
+		$this->assertStringContainsString( 'aria-label="Operation plan (1)"', $after_delete );
+		$this->assertStringContainsString( 'Removed from the operation plan.', $after_delete );
 		$this->assertStringNotContainsString( 'Tab category renamed', $after_delete );
 		$this->assertStringContainsString( 'Tab tag renamed', $after_delete );
 
@@ -369,7 +369,7 @@ final class AdminPageTest extends WP_UnitTestCase {
 		ob_start();
 		$this->page->render();
 		$history = (string) ob_get_clean();
-		$this->assertStringContainsString( '実行済みの操作はありません。', $history );
+		$this->assertStringContainsString( 'No operations have been run.', $history );
 		$this->assertStringNotContainsString( 'Tab category renamed', $history );
 	}
 
@@ -387,13 +387,13 @@ final class AdminPageTest extends WP_UnitTestCase {
 		ob_start();
 		$this->page->render();
 		$categories = (string) ob_get_clean();
-		$this->assertStringContainsString( 'data-label="Parent category">なし</td>', $categories );
+		$this->assertStringContainsString( 'data-label="Parent category">None</td>', $categories );
 
 		$_GET = array( 'taxonomy' => 'post_tag' );
 		ob_start();
 		$this->page->render();
 		$tags = (string) ob_get_clean();
-		$this->assertStringContainsString( 'data-label="Parent category">対象外</td>', $tags );
+		$this->assertStringContainsString( 'data-label="Parent category">Not applicable</td>', $tags );
 	}
 
 	/**
@@ -487,9 +487,9 @@ final class AdminPageTest extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'aria-modal="true"', $output );
 		$this->assertStringContainsString( 'data-auto-open="1" data-running="0" hidden', $output );
 		$this->assertStringContainsString( 'Modal renamed', $output );
-		$this->assertStringContainsString( '対象投稿を確認', $output );
+		$this->assertStringContainsString( 'Review target posts', $output );
 		$this->assertStringNotContainsString( 'Lazy title fixture', $output );
-		$this->assertStringNotContainsString( '変更後のslug', $output );
+		$this->assertStringNotContainsString( 'New slug', $output );
 		$this->assertStringNotContainsString( 'Preview created:', $output );
 		$this->assertStringNotContainsString( 'Warnings: 0', $output );
 		$this->assertStringContainsString( 'class="button tt-button tt-button--secondary term-steward-modal__cancel"', $output );
@@ -539,7 +539,7 @@ final class AdminPageTest extends WP_UnitTestCase {
 		$output = (string) ob_get_clean();
 		$this->assertStringContainsString( 'Slug source renamed / slug-changed', $output );
 		$this->assertStringContainsString( 'slug-changed', $output );
-		$this->assertStringNotContainsString( '対象投稿を確認（0件）', $output );
+		$this->assertStringNotContainsString( 'Review target posts (0)', $output );
 	}
 
 	/**
@@ -645,7 +645,7 @@ final class AdminPageTest extends WP_UnitTestCase {
 		$this->assertMatchesRegularExpression( '/id="term-steward-destination"[^>]+data-error-focus="true"/', $merge_output );
 		$this->assertLessThan( strpos( $merge_output, 'term-steward-destination-error-0' ), strpos( $merge_output, 'term-steward-merge-destination-group' ) );
 		$this->assertMatchesRegularExpression( '/<select[^>]+id="term-steward-destination"[^>]*>\s*<option value="">/', $merge_output );
-		$this->assertStringContainsString( '選択していた統合先が統合元に含まれたため、選択を解除しました。', $merge_output );
+		$this->assertStringContainsString( 'The selected destination became a source, so the destination was cleared.', $merge_output );
 		$this->assertSame( 1, preg_match( '/<select[^>]+id="term-steward-destination"[^>]*>(.*?)<\/select>/s', $merge_output, $destination_select ) );
 		$this->assertStringNotContainsString( 'data-term-key="' . $term_id . '"', $destination_select[1] );
 		$this->assertStringContainsString( 'data-term-key="' . $second_id . '"', $destination_select[1] );

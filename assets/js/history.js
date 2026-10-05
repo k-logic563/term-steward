@@ -37,7 +37,7 @@
 		const close = document.createElement( 'button' );
 		close.type = 'button';
 		close.className = 'button tt-button tt-button--secondary term-steward-modal__cancel';
-		close.textContent = strings.closeResult || '閉じる';
+		close.textContent = strings.closeResult || 'Close';
 		footer.replaceChildren( close );
 	}
 
@@ -72,7 +72,7 @@
 		terminal = true;
 		const heading = modal?.querySelector( '#term-steward-undo-heading' );
 		if ( heading ) {
-			heading.textContent = strings.resultTitle || '取り消し結果';
+			heading.textContent = strings.resultTitle || 'Undo result';
 		}
 		showProgress( progress );
 		resultFooter();
@@ -95,7 +95,7 @@
 			body.append( status, output );
 		}
 		status.querySelector( 'strong' ).textContent = progress.status_label;
-		output.textContent = ( strings.progress || '進捗：%1$d / %2$d、成功：%3$d件、失敗：%4$d件、残り：%5$d件' )
+		output.textContent = ( strings.progress || 'Progress: %1$d / %2$d; successful: %3$d; failed: %4$d; remaining: %5$d' )
 			.replace( '%1$d', progress.processed )
 			.replace( '%2$d', progress.total )
 			.replace( '%3$d', progress.succeeded )
@@ -108,7 +108,7 @@
 		const heading = modal?.querySelector( '#term-steward-undo-heading' );
 		terminal = true;
 		if ( heading ) {
-			heading.textContent = strings.stoppedTitle || '取り消しを中断しました';
+			heading.textContent = strings.stoppedTitle || 'Undo interrupted';
 		}
 		if ( body ) {
 			const notice = document.createElement( 'p' );
@@ -135,10 +135,10 @@
 					if ( response.status >= 500 ) {
 						throw new Error( 'temporary response error' );
 					}
-					throw new globalThis.DOMException( strings.cannotContinue || '取り消し処理を続行できませんでした。', 'DataError' );
+					throw new globalThis.DOMException( strings.cannotContinue || 'Undo could not continue.', 'DataError' );
 				}
 				if ( ! response.ok || ! result.success ) {
-					throw new globalThis.DOMException( result.data?.message || strings.cannotContinue || '取り消し処理を続行できませんでした。', 'DataError' );
+					throw new globalThis.DOMException( result.data?.message || strings.cannotContinue || 'Undo could not continue.', 'DataError' );
 				}
 				return result.data;
 			} catch ( error ) {
@@ -168,18 +168,18 @@
 				requestCount++;
 				showProgress( progress );
 				if ( progress.has_more && ( progress.processed <= previousProcessed || progress.processed > progress.total || requestCount > progress.total + 1 ) ) {
-					throw new globalThis.DOMException( strings.progressStopped || 'サーバー側の進捗を確認できないため、取り消し処理を中断しました。操作履歴から再開できます。', 'DataError' );
+					throw new globalThis.DOMException( strings.progressStopped || 'Undo was interrupted because server progress could not be verified. Resume it from operation history.', 'DataError' );
 				}
 				previousProcessed = progress.processed;
 			} while ( progress.has_more && progress.status === 'undoing' );
 			if ( [ 'undone', 'undo_partial_failed', 'failed' ].includes( progress.status ) ) {
 				showResult( progress );
 			} else {
-				showStopped( strings.interrupted || '取り消し処理を中断しました。操作履歴から再開できます。' );
+				showStopped( strings.interrupted || 'Undo was interrupted. You can resume it from operation history.' );
 			}
 			setModalLocked( false );
 		} catch ( error ) {
-			showStopped( error?.name === 'DataError' ? error.message : ( strings.interrupted || '取り消し処理を中断しました。操作履歴から再開できます。' ) );
+			showStopped( error?.name === 'DataError' ? error.message : ( strings.interrupted || 'Undo was interrupted. You can resume it from operation history.' ) );
 		}
 	}
 
@@ -244,7 +244,7 @@
 			if ( button.getAttribute( 'aria-expanded' ) === 'true' ) {
 				list.replaceChildren( ...summary.map( ( item ) => item.cloneNode( true ) ) );
 				button.setAttribute( 'aria-expanded', 'false' );
-				button.textContent = strings.showDetails || '詳しく見る';
+				button.textContent = strings.showDetails || 'View details';
 				return;
 			}
 			button.disabled = true;
@@ -272,7 +272,7 @@
 						const item = document.createElement( 'li' );
 						item.className = `term-steward-log term-steward-log--${ log.severity }`;
 						const state = document.createElement( 'strong' );
-						state.textContent = log.severity === 'error' ? ( strings.failure || '失敗：' ) : ( log.severity === 'warning' ? ( strings.warning || '警告：' ) : ( strings.success || '成功：' ) );
+						state.textContent = log.severity === 'error' ? ( strings.failure || 'Failed: ' ) : ( log.severity === 'warning' ? ( strings.warning || 'Warning: ' ) : ( strings.success || 'Success: ' ) );
 						item.append( state, document.createTextNode( ` ${ log.label }（${ log.date }）` ) );
 						return item;
 					} );
@@ -280,7 +280,7 @@
 				}
 				list.replaceChildren( ...full.map( ( item ) => item.cloneNode( true ) ) );
 				button.setAttribute( 'aria-expanded', 'true' );
-				button.textContent = strings.collapse || '閉じる';
+				button.textContent = strings.collapse || 'Close';
 			} catch {
 				const error = document.createElement( 'p' );
 				error.className = 'notice notice-error inline';

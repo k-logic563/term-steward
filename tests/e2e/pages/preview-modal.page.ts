@@ -9,17 +9,17 @@ export class PreviewModal {
 
   async expectOpen(target?: string): Promise<void> {
     await expect(this.dialog()).toBeVisible();
-    await expect(this.dialog()).toContainText('変更内容のプレビュー');
+    await expect(this.dialog()).toContainText('Change preview');
     if (target) await expect(this.dialog()).toContainText(target);
   }
 
   async cancel(): Promise<void> {
-    await this.dialog().getByRole('button', { name: 'キャンセル' }).click();
+    await this.dialog().getByRole('button', { name: 'Cancel' }).click();
     await expect(this.dialog()).toBeHidden();
   }
 
   async execute(): Promise<void> {
-    await this.dialog().getByRole('button', { name: '実行', exact: true }).click();
-    await expect(this.page.getByText('処理が完了しました。', { exact: true })).toBeVisible({ timeout: 60_000 });
+    await this.dialog().getByRole('button', { name: 'Execute', exact: true }).click();
+    await expect(this.page.getByText('Processing completed.', { exact: true })).toBeVisible({ timeout: 60_000 });
   }
 }

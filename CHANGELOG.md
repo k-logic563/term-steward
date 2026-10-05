@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+- WordPress.org向けの公開説明とgettext原文を英語化
+- WordPress.org Language Packを使う構成へ変更し、同梱翻訳ロードを削除
+- 配布ZIPから`.po`・`.mo`・`.pot`・`.l10n.php`を除外
+- 配布ZIPに`composer.json`を追加
+
 ## 0.1.0
 
 - 製品識別子をTerm Stewardへ統一し、旧名称の別プラグインと同居できる独立したnamespace、hook、Ajax、asset、DB、optionを採用

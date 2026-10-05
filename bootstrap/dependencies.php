@@ -9,15 +9,8 @@ declare(strict_types=1);
 
 namespace TermSteward;
 
-/**
- * Loads bundled translations without depending on the Composer autoloader.
- */
-function term_steward_load_translations(): void {
-	load_plugin_textdomain(
-		'term-steward',
-		false,
-		dirname( plugin_basename( TERM_STEWARD_PLUGIN_FILE ) ) . '/languages'
-	);
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 /**

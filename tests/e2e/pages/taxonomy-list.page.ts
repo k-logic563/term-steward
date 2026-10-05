@@ -9,48 +9,48 @@ export class TaxonomyListPage {
   }
 
   async openCategories(): Promise<void> {
-    await this.page.locator('.nav-tab-wrapper').getByRole('link', { name: /^カテゴリー/ }).click();
+    await this.page.locator('.nav-tab-wrapper').getByRole('link', { name: /^Category/ }).click();
   }
 
   async openTags(): Promise<void> {
-    await this.page.locator('.nav-tab-wrapper').getByRole('link', { name: /^タグ/ }).click();
+    await this.page.locator('.nav-tab-wrapper').getByRole('link', { name: /^Tag/ }).click();
   }
 
   async toggleSearch(): Promise<void> {
-    await this.page.getByText('検索パネル', { exact: true }).click();
+    await this.page.getByText('Search panel', { exact: true }).click();
   }
 
   async search(name: string): Promise<void> {
-    await this.page.getByRole('searchbox', { name: 'キーワード' }).fill(name);
-    await this.page.getByRole('button', { name: '条件を適用' }).click();
+    await this.page.getByRole('searchbox', { name: 'Keyword' }).fill(name);
+    await this.page.getByRole('button', { name: 'Apply conditions' }).click();
   }
 
   async resetSearch(): Promise<void> {
-    await this.page.getByRole('link', { name: '条件をリセット' }).click();
+    await this.page.getByRole('link', { name: 'Reset conditions' }).click();
   }
 
   async selectTerm(name: string): Promise<void> {
-    await this.page.getByRole('checkbox', { name: `${name}を選択`, exact: true }).check();
+    await this.page.getByRole('checkbox', { name: `Select ${name}`, exact: true }).check();
   }
 
   async toggleActions(): Promise<void> {
-    await this.page.getByText('処理パネル', { exact: true }).click();
+    await this.page.getByText('Action panel', { exact: true }).click();
   }
 
-  async chooseAction(name: '名称変更' | '統合' | '削除'): Promise<void> {
+  async chooseAction(name: 'Rename' | 'Merge' | 'Delete'): Promise<void> {
     await this.page.getByRole('radio', { name }).check();
   }
 
   async enterName(name: string): Promise<void> {
-    await this.page.getByLabel('新しい名前').fill(name);
+    await this.page.getByLabel('New name').fill(name);
   }
 
   async chooseDestination(name: string): Promise<void> {
-    await this.page.getByLabel('統合先').selectOption({ label: name });
+    await this.page.getByLabel('Merge destination').selectOption({ label: name });
   }
 
   async addToPlan(): Promise<void> {
-    await this.page.getByRole('button', { name: '計画に追加' }).click();
+    await this.page.getByRole('button', { name: 'Add to plan' }).click();
   }
 
   row(name: string) {

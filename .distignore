@@ -23,7 +23,6 @@
 /.phpunit.result.cache
 /AGENTS.md
 /REQUIREMENTS.md
-/composer.json
 /composer.lock
 /eslint.config.js
 /package.json
@@ -37,3 +36,4 @@
 /Makefile
 /phpcs.xml.dist
 /phpunit.xml.dist
+/languages

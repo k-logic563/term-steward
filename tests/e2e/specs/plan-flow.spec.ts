@@ -11,7 +11,7 @@ async function createRename(page: Page, newName: string) {
   await taxonomy.open();
   await taxonomy.selectTerm('E2E-CAT-RENAME');
   await taxonomy.toggleActions();
-  await taxonomy.chooseAction('名称変更');
+  await taxonomy.chooseAction('Rename');
   await taxonomy.enterName(newName);
   await taxonomy.addToPlan();
   return taxonomy;
@@ -28,7 +28,7 @@ test('E2E-004 / MT-017, MT-030, MT-033：名称変更計画とキャンセル', 
   await modal.cancel();
 
   expect(readE2EState().terms.cat_rename.name).toBe('E2E-CAT-RENAME');
-  await page.locator('.nav-tab-wrapper').getByRole('link', { name: /^カテゴリー/ }).click();
+  await page.locator('.nav-tab-wrapper').getByRole('link', { name: /^Category/ }).click();
   await page.reload();
   await expect(page.getByRole('dialog')).toHaveCount(0);
 });
@@ -95,7 +95,7 @@ test('E2E-005 / MT-037：名称変更の実行', async ({ page }) => {
 
   const history = new HistoryPage(page);
   await history.open();
-  await history.expectLatest('名称変更');
+  await history.expectLatest('Rename');
 });
 
 test('E2E-006 / MT-019, MT-039, MT-043：タグ統合', async ({ page }) => {
@@ -104,7 +104,7 @@ test('E2E-006 / MT-019, MT-039, MT-043：タグ統合', async ({ page }) => {
   await taxonomy.openTags();
   await taxonomy.selectTerm('E2E-TAG-MERGE-SOURCE');
   await taxonomy.toggleActions();
-  await taxonomy.chooseAction('統合');
+  await taxonomy.chooseAction('Merge');
   await taxonomy.chooseDestination('E2E-TAG-MERGE-TARGET');
   await taxonomy.addToPlan();
 
@@ -134,7 +134,7 @@ test('E2E-006 / MT-019, MT-039, MT-043：タグ統合', async ({ page }) => {
 
   const history = new HistoryPage(page);
   await history.open();
-  await history.expectLatest('統合');
+  await history.expectLatest('Merge');
 });
 
 test('E2E-007 / MT-041：完全未使用termの削除', async ({ page }) => {
@@ -143,7 +143,7 @@ test('E2E-007 / MT-041：完全未使用termの削除', async ({ page }) => {
   await taxonomy.openTags();
   await taxonomy.selectTerm('E2E-TAG-UNUSED');
   await taxonomy.toggleActions();
-  await taxonomy.chooseAction('削除');
+  await taxonomy.chooseAction('Delete');
   await taxonomy.addToPlan();
 
   const board = new PlanBoardPage(page);
@@ -163,7 +163,7 @@ test('E2E-007 / MT-041：完全未使用termの削除', async ({ page }) => {
 
   const history = new HistoryPage(page);
   await history.open();
-  await history.expectLatest('削除');
+  await history.expectLatest('Delete');
 });
 
 test('E2E-008 / MT-055：Undo', async ({ page }) => {
@@ -193,5 +193,5 @@ test('E2E-008 / MT-055：Undo', async ({ page }) => {
   expect(state.persistence.duplicate_journals).toBe(0);
 
   await page.reload();
-  await expect(page.getByRole('button', { name: '変更を元に戻す' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Undo changes' })).toHaveCount(0);
 });

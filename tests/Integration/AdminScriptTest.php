@@ -51,7 +51,7 @@ final class AdminScriptTest extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'progress.processed <= previousProcessed', $script );
 		$this->assertStringContainsString( 'showResult( progress )', $script );
 		$this->assertStringContainsString( 'footer.replaceChildren( close )', $script );
-		$this->assertStringContainsString( "heading.textContent = strings.resultTitle || '取り消し結果'", $script );
+		$this->assertStringContainsString( "heading.textContent = strings.resultTitle || 'Undo result'", $script );
 		$this->assertStringContainsString( "[ 'undone', 'undo_partial_failed', 'failed' ].includes( progress.status )", $script );
 		$this->assertStringContainsString( "document.querySelectorAll( '.term-steward-undo-preview' )", $script );
 		$this->assertStringContainsString( "button.dataset.submitting === '1'", $script );
@@ -65,7 +65,7 @@ final class AdminScriptTest extends WP_UnitTestCase {
 	public function test_undo_ajax_returns_non_retryable_session_guidance_for_invalid_nonce(): void {
 		$page = $this->page_source();
 		$this->assertStringContainsString( 'wp_verify_nonce( $nonce, HistoryPage::NONCE_ACTION )', $page );
-		$this->assertStringContainsString( 'セッションまたは認証情報が無効になりました。ページを再読み込みし、必要に応じて再ログインしてから操作を再開してください。', $page );
+		$this->assertStringContainsString( 'Your session or credentials are no longer valid. Reload the page, sign in again if needed, and resume the operation.', $page );
 		$this->assertStringContainsString( "'retryable' => false", $page );
 		$this->assertStringContainsString( "\t\t\t\t403\n\t\t\t);", $page );
 		$this->assertStringContainsString( 'UndoErrorCode::STALE_PREVIEW, UndoErrorCode::LOCKED', $page );
@@ -86,7 +86,7 @@ final class AdminScriptTest extends WP_UnitTestCase {
 		$script = $this->history_script();
 		$this->assertStringContainsString( "data.set( 'action', 'term_steward_history_logs' )", $script );
 		$this->assertStringContainsString( "button.setAttribute( 'aria-expanded', 'true' )", $script );
-		$this->assertStringContainsString( "button.textContent = strings.collapse || '閉じる'", $script );
+		$this->assertStringContainsString( "button.textContent = strings.collapse || 'Close'", $script );
 		$this->assertStringContainsString( 'page <= totalPages', $script );
 	}
 

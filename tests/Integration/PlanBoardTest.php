@@ -115,8 +115,8 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		$output = (string) ob_get_clean();
 		$this->assertStringContainsString( 'Renamed category', $output );
 		$this->assertStringContainsString( 'Renamed tag', $output );
-		$this->assertStringContainsString( '<h3>カテゴリー</h3>', $output );
-		$this->assertStringContainsString( '<h3>タグ</h3>', $output );
+		$this->assertStringContainsString( '<h3>Category</h3>', $output );
+		$this->assertStringContainsString( '<h3>Tag</h3>', $output );
 		$this->assertSame( 0, substr_count( $output, 'role="dialog"' ) );
 
 		$other_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -166,7 +166,7 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		ob_start();
 		$this->board->render( $result );
 		$output = (string) ob_get_clean();
-		$this->assertStringContainsString( '処理が完了しました。', $output );
+		$this->assertStringContainsString( 'Processing completed.', $output );
 		$this->assertStringContainsString( 'class="notice notice-success inline term-steward-plan-notice" role="status"', $output );
 		$this->assertStringNotContainsString( 'role="dialog"', $output );
 		$_SERVER['REQUEST_METHOD'] = 'GET';
@@ -193,8 +193,8 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		$this->board->render( $preview );
 		$output = (string) ob_get_clean();
 		$this->assertSame( 1, substr_count( $output, 'role="dialog"' ) );
-		$this->assertStringContainsString( '<h3>タグ</h3>', $output );
-		$this->assertStringNotContainsString( '<h3>カテゴリー</h3>', $output );
+		$this->assertStringContainsString( '<h3>Tag</h3>', $output );
+		$this->assertStringNotContainsString( '<h3>Category</h3>', $output );
 		$this->post( 'run_all' );
 		$result = $this->board->handle();
 		$this->assertSame( array(), $result['errors'] );
@@ -221,8 +221,8 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		$this->board->render( $preview );
 		$output = (string) ob_get_clean();
 
-		$this->assertStringContainsString( '<h4>タグを削除</h4>', $output );
-		$this->assertStringContainsString( '削除対象：3件', $output );
+		$this->assertStringContainsString( '<h4>Delete Tag</h4>', $output );
+		$this->assertStringContainsString( 'Terms to delete: 3', $output );
 		$this->assertStringContainsString( '<li>Unused tag A</li>', $output );
 		$this->assertStringContainsString( '<li>Unused tag B</li>', $output );
 		$this->assertStringContainsString( '<li>Unused tag C</li>', $output );
@@ -294,7 +294,7 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		$output = (string) ob_get_clean();
 
 		$this->assertSame( array( 'execution_stale_preview' ), $result['errors'] );
-		$this->assertStringContainsString( '削除を開始できませんでした。「Changed delete target」は現在、別のオブジェクトで使用されています。', $output );
+		$this->assertStringContainsString( 'Deletion could not start. &quot;Changed delete target&quot; It is currently used by another object.', $output );
 		$this->assertStringContainsString( 'class="notice notice-error inline term-steward-plan-notice" role="alert"', $output );
 		$this->assertInstanceOf( WP_Term::class, get_term( $first, 'post_tag' ) );
 		$this->assertInstanceOf( WP_Term::class, get_term( $second, 'post_tag' ) );
@@ -342,9 +342,9 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		ob_start();
 		$this->board->render( $result );
 		$output = (string) ob_get_clean();
-		$this->assertStringContainsString( 'すべての対象を処理できないため、この操作は失敗として終了しました。', $output );
-		$this->assertStringContainsString( '操作計画を作り直し、変更内容をもう一度確認してください。', $output );
-		$this->assertStringNotContainsString( '処理が完了しました。', $output );
+		$this->assertStringContainsString( 'No target can be processed, so this operation ended as failed.', $output );
+		$this->assertStringContainsString( 'Recreate the plan and review the changes again.', $output );
+		$this->assertStringNotContainsString( 'Processing completed.', $output );
 		$this->assertStringNotContainsString( 'value="continue_all"', $output );
 
 		$_SERVER['REQUEST_METHOD'] = 'GET';
@@ -355,8 +355,8 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		( new Page() )->render();
 		$history_output = (string) ob_get_clean();
 		unset( $_GET['view'], $_GET['history_id'] );
-		$this->assertStringContainsString( '<dt>結果</dt><dd>失敗</dd>', $history_output );
-		$this->assertStringContainsString( '操作計画を作り直し、変更内容をもう一度確認してください。', $history_output );
+		$this->assertStringContainsString( '<dt>Result</dt><dd>Failed</dd>', $history_output );
+		$this->assertStringContainsString( 'Recreate the plan and review the changes again.', $history_output );
 	}
 
 	/** Invalid nonce does not turn an unstarted preview into a failed operation. */
@@ -428,7 +428,7 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		ob_start();
 		$this->board->render( $first );
 		$progress_output = (string) ob_get_clean();
-		$this->assertStringContainsString( '全体：11件、完了：10件、未処理：1件、失敗：0件、スキップ：0件、現在の状態：処理中', $progress_output );
+		$this->assertStringContainsString( 'Total: 11; completed: 10; pending: 1; failed: 0; skipped: 0; current status: Processing', $progress_output );
 		$this->assertStringContainsString( 'aria-live="polite"', $progress_output );
 		$this->post_remove( $first['results']['category'], 'category', 0 );
 		$this->assertSame( array( 'plan_invalid' ), $this->board->handle()['errors'] );
@@ -441,7 +441,7 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		$this->board->render( $reloaded );
 		$reloaded_output = (string) ob_get_clean();
 		$this->assertStringContainsString( 'value="continue_all"', $reloaded_output );
-		$this->assertStringContainsString( '処理を再開', $reloaded_output );
+		$this->assertStringContainsString( 'Resume processing', $reloaded_output );
 		$this->assertStringNotContainsString( 'role="dialog"', $reloaded_output );
 		$this->post( 'discard_all', array( 'confirmed' => '1' ) );
 		$this->assertSame( array( 'plan_invalid' ), $this->board->handle()['errors'] );
@@ -461,7 +461,7 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		);
 		$interrupted = $this->board->handle();
 		$this->assertFalse( $interrupted['modal'] );
-		$this->assertSame( '処理を中断しました。操作計画から再開してください。', $interrupted['notice'] );
+		$this->assertSame( 'Processing was interrupted. Resume it from the operation plan.', $interrupted['notice'] );
 		$this->assertSame( Status::RUNNING->value, $interrupted['results']['category']['status'] );
 		$this->assertTrue( $lock->release( $category_id, $token ) );
 		$pending = ( new OperationItemRepository( $wpdb ) )->find_pending( $category_id, 10 );
@@ -488,11 +488,11 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		ob_start();
 		$this->board->render( $final );
 		$output = (string) ob_get_clean();
-		$this->assertStringContainsString( '一部の処理に失敗しました。操作履歴を確認してください。', $output );
+		$this->assertStringContainsString( 'Some items failed. Check the operation history.', $output );
 		$this->assertStringContainsString( 'class="notice notice-warning inline term-steward-plan-notice" role="status"', $output );
-		$this->assertStringContainsString( '現在の状態：一部失敗', $output );
-		$this->assertStringContainsString( '未処理：0件', $output );
-		$this->assertStringContainsString( 'スキップ：0件', $output );
+		$this->assertStringContainsString( 'current status: Partially failed', $output );
+		$this->assertStringContainsString( 'pending: 0', $output );
+		$this->assertStringContainsString( 'skipped: 0', $output );
 		$this->assertStringNotContainsString( 'role="dialog"', $output );
 	}
 
@@ -507,11 +507,11 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		$this->board->render( $this->board->handle() );
 		$output = (string) ob_get_clean();
 		$this->assertSame( 2, substr_count( $output, 'value="remove_item"' ) );
-		$this->assertStringContainsString( '<span class="screen-reader-text">削除</span>', $output );
-		$this->assertStringContainsString( '<th scope="col">種別</th>', $output );
-		$this->assertStringContainsString( 'role="region" aria-label="カテゴリーの操作計画"', $output );
-		$this->assertStringContainsString( 'カテゴリー「Visible category」の名称変更を操作計画から削除', $output );
-		$this->assertStringContainsString( 'タグ「Visible tag」の名称変更を操作計画から削除', $output );
+		$this->assertStringContainsString( '<span class="screen-reader-text">Delete</span>', $output );
+		$this->assertStringContainsString( '<th scope="col">Type</th>', $output );
+		$this->assertStringContainsString( 'role="region" aria-label="Category operation plan"', $output );
+		$this->assertStringContainsString( 'Remove Rename for Category &quot;Visible category&quot; from the operation plan', $output );
+		$this->assertStringContainsString( 'Remove Rename for Tag &quot;Visible tag&quot; from the operation plan', $output );
 		$this->assertStringNotContainsString( '>操作</th>', $output );
 		$this->assertStringNotContainsString( '>編集<', $output );
 		$this->assertStringNotContainsString( 'value="edit_item"', $output );
@@ -537,7 +537,7 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		$this->post_remove( $category, 'category', 0 );
 		$result = $this->board->handle();
 		$this->assertSame( array(), $result['errors'] );
-		$this->assertSame( '操作計画から削除しました。', $result['notice'] );
+		$this->assertSame( 'Removed from the operation plan.', $result['notice'] );
 		$this->assertCount( 1, $result['operations']['category']['requested_data']['plan'] );
 		$this->assertSame( $second, $result['operations']['category']['requested_data']['plan'][0]['sources'][0]['term_id'] );
 		$this->assertSame( $tag_plan['requested_data']['plan'], $result['operations']['post_tag']['requested_data']['plan'] );
@@ -551,7 +551,7 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		ob_start();
 		$this->board->render( $result );
 		$output = (string) ob_get_clean();
-		$this->assertStringContainsString( '操作計画から削除しました。', $output );
+		$this->assertStringContainsString( 'Removed from the operation plan.', $output );
 		$this->post_remove( $tag_plan, 'post_tag', 0 );
 		$after_tag_removal = $this->board->handle();
 		$this->assertSame( array(), $after_tag_removal['errors'] );
@@ -580,8 +580,8 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		ob_start();
 		$this->board->render( $result );
 		$output = (string) ob_get_clean();
-		$this->assertStringContainsString( '操作計画はまだありません。', $output );
-		$this->assertStringContainsString( 'カテゴリーまたはタグを選択し、処理パネルから計画へ追加してください。', $output );
+		$this->assertStringContainsString( 'There is no operation plan yet.', $output );
+		$this->assertStringContainsString( 'Select categories or tags and add them from the action panel.', $output );
 	}
 
 	/** An empty retained category draft does not block the remaining tag plan. */
@@ -644,7 +644,7 @@ final class PlanBoardTest extends WP_UnitTestCase {
 		ob_start();
 		$this->board->render( $previewed );
 		$output = (string) ob_get_clean();
-		$this->assertStringContainsString( '操作計画が変更されたか、この操作を行えない状態です。', $output );
+		$this->assertStringContainsString( 'The operation plan changed or cannot be run in its current state.', $output );
 		$this->assertStringNotContainsString( 'value="remove_item"', $output );
 	}
 

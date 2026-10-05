@@ -103,7 +103,7 @@ final class HistoryPage {
 		}
 		?>
 		<div id="term-steward-history-content">
-		<h2><?php echo esc_html__( '操作履歴', 'term-steward' ); ?></h2>
+		<h2><?php echo esc_html__( 'Operation history', 'term-steward' ); ?></h2>
 		<?php if ( null !== $error ) : ?>
 			<div class="notice notice-error inline term-steward-history-error" role="alert" tabindex="-1"><p><?php echo esc_html( $this->error_label( $error ) ); ?></p></div>
 		<?php endif; ?>
@@ -215,18 +215,18 @@ final class HistoryPage {
 	private function render_list( array $history, int $user_id ): void {
 		if ( array() === $history['items'] ) {
 			?>
-			<p><?php echo esc_html__( '実行済みの操作はありません。', 'term-steward' ); ?></p>
+			<p><?php echo esc_html__( 'No operations have been run.', 'term-steward' ); ?></p>
 			<?php
 			return;
 		}
 		?>
-		<div class="term-steward-table-scroll" tabindex="0" role="region" aria-label="<?php echo esc_attr__( '操作履歴一覧', 'term-steward' ); ?>">
+		<div class="term-steward-table-scroll" tabindex="0" role="region" aria-label="<?php echo esc_attr__( 'Operation history list', 'term-steward' ); ?>">
 		<table class="wp-list-table widefat fixed striped term-steward-history-table">
-			<thead><tr><th scope="col"><?php echo esc_html__( '実行日時', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( '種別', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( '処理内容', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( '対象件数', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( '変更件数', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( '結果', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( '取り消し', 'term-steward' ); ?></th><th scope="col"><span class="screen-reader-text"><?php echo esc_html__( '詳細', 'term-steward' ); ?></span></th></tr></thead>
+			<thead><tr><th scope="col"><?php echo esc_html__( 'Started', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( 'Type', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( 'Action', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( 'Targets', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( 'Changes', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( 'Result', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( 'Undo', 'term-steward' ); ?></th><th scope="col"><span class="screen-reader-text"><?php echo esc_html__( 'Details', 'term-steward' ); ?></span></th></tr></thead>
 			<tbody>
 			<?php foreach ( $history['items'] as $operation ) : ?>
 				<?php $assessment = null === $operation['parent_operation_id'] ? $this->planner->assess( (int) $operation['id'], $user_id ) : null; ?>
-				<tr><td><?php echo esc_html( $this->date_label( (string) $operation['started_at'] ) ); ?></td><td><?php echo esc_html( $this->taxonomy_label( (string) $operation['taxonomy'] ) ); ?></td><td><?php echo esc_html( $this->action_summary( $operation ) ); ?></td><td><?php echo esc_html( (string) $this->target_count( $operation ) ); ?></td><td><?php echo esc_html( (string) $this->change_count( (int) $operation['id'] ) ); ?></td><td><?php echo esc_html( $this->status_label( (string) $operation['status'] ) ); ?></td><td><?php echo esc_html( null === $assessment ? $this->undo_result_label( $operation ) : $this->availability_label( (string) $assessment['availability'] ) ); ?></td><td><a href="<?php echo esc_url( $this->history_url( array( 'history_id' => (int) $operation['id'] ) ) ); ?>"><?php echo esc_html__( '詳細', 'term-steward' ); ?></a></td></tr>
+				<tr><td><?php echo esc_html( $this->date_label( (string) $operation['started_at'] ) ); ?></td><td><?php echo esc_html( $this->taxonomy_label( (string) $operation['taxonomy'] ) ); ?></td><td><?php echo esc_html( $this->action_summary( $operation ) ); ?></td><td><?php echo esc_html( (string) $this->target_count( $operation ) ); ?></td><td><?php echo esc_html( (string) $this->change_count( (int) $operation['id'] ) ); ?></td><td><?php echo esc_html( $this->status_label( (string) $operation['status'] ) ); ?></td><td><?php echo esc_html( null === $assessment ? $this->undo_result_label( $operation ) : $this->availability_label( (string) $assessment['availability'] ) ); ?></td><td><a href="<?php echo esc_url( $this->history_url( array( 'history_id' => (int) $operation['id'] ) ) ); ?>"><?php echo esc_html__( 'Details', 'term-steward' ); ?></a></td></tr>
 			<?php endforeach; ?>
 			</tbody>
 		</table>
@@ -247,41 +247,41 @@ final class HistoryPage {
 		$assessment = null === $operation['parent_operation_id'] ? $this->planner->assess( (int) $operation['id'], $user_id ) : null;
 		$result     = is_array( $operation['result_data'] ) ? $operation['result_data'] : array();
 		?>
-		<p><a href="<?php echo esc_url( $this->history_url() ); ?>">&larr; <?php echo esc_html__( '操作履歴へ戻る', 'term-steward' ); ?></a></p>
-		<h3><?php echo esc_html__( '操作の詳細', 'term-steward' ); ?></h3>
+		<p><a href="<?php echo esc_url( $this->history_url() ); ?>">&larr; <?php echo esc_html__( 'Back to operation history', 'term-steward' ); ?></a></p>
+		<h3><?php echo esc_html__( 'Operation details', 'term-steward' ); ?></h3>
 		<dl class="term-steward-history-detail">
-			<dt><?php echo esc_html__( '実行日時', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->date_label( (string) $operation['started_at'] ) ); ?></dd>
-			<dt><?php echo esc_html__( '完了日時', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->date_label( (string) ( $operation['completed_at'] ?? '' ) ) ); ?></dd>
-			<dt><?php echo esc_html__( '種別', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->taxonomy_label( (string) $operation['taxonomy'] ) ); ?></dd>
-			<dt><?php echo esc_html__( '実行した処理', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->action_summary( $operation ) ); ?></dd>
-			<dt><?php echo esc_html__( '対象となった分類', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->target_label( $operation ) ); ?></dd>
-			<dt><?php echo esc_html__( '結果', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->status_label( (string) $operation['status'] ) ); ?></dd>
-			<dt><?php echo esc_html__( '成功件数', 'term-steward' ); ?></dt><dd><?php echo esc_html( (string) (int) ( $result['completed'] ?? 0 ) ); ?></dd>
-			<dt><?php echo esc_html__( '失敗件数', 'term-steward' ); ?></dt><dd><?php echo esc_html( (string) (int) ( $result['failed'] ?? 0 ) ); ?></dd>
-			<dt><?php echo esc_html__( '処理済み件数', 'term-steward' ); ?></dt><dd><?php echo esc_html( (string) ( (int) ( $result['total'] ?? 0 ) - (int) ( $result['pending'] ?? 0 ) ) ); ?></dd>
-			<dt><?php echo esc_html__( '警告件数', 'term-steward' ); ?></dt><dd><?php echo esc_html( (string) $log_counts['warning'] ); ?></dd>
-			<dt><?php echo esc_html__( '警告', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->message_summary( $operation['warnings'], true ) ); ?></dd>
-			<dt><?php echo esc_html__( 'エラー', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->message_summary( $operation['errors'], false ) ); ?></dd>
-			<dt><?php echo esc_html__( '取り消し状態', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->undo_state_label( $operation ) ); ?></dd>
+			<dt><?php echo esc_html__( 'Started', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->date_label( (string) $operation['started_at'] ) ); ?></dd>
+			<dt><?php echo esc_html__( 'Completed', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->date_label( (string) ( $operation['completed_at'] ?? '' ) ) ); ?></dd>
+			<dt><?php echo esc_html__( 'Type', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->taxonomy_label( (string) $operation['taxonomy'] ) ); ?></dd>
+			<dt><?php echo esc_html__( 'Actions performed', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->action_summary( $operation ) ); ?></dd>
+			<dt><?php echo esc_html__( 'Target terms', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->target_label( $operation ) ); ?></dd>
+			<dt><?php echo esc_html__( 'Result', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->status_label( (string) $operation['status'] ) ); ?></dd>
+			<dt><?php echo esc_html__( 'Successful items', 'term-steward' ); ?></dt><dd><?php echo esc_html( (string) (int) ( $result['completed'] ?? 0 ) ); ?></dd>
+			<dt><?php echo esc_html__( 'Failed items', 'term-steward' ); ?></dt><dd><?php echo esc_html( (string) (int) ( $result['failed'] ?? 0 ) ); ?></dd>
+			<dt><?php echo esc_html__( 'Processed items', 'term-steward' ); ?></dt><dd><?php echo esc_html( (string) ( (int) ( $result['total'] ?? 0 ) - (int) ( $result['pending'] ?? 0 ) ) ); ?></dd>
+			<dt><?php echo esc_html__( 'Warning count', 'term-steward' ); ?></dt><dd><?php echo esc_html( (string) $log_counts['warning'] ); ?></dd>
+			<dt><?php echo esc_html__( 'Warnings', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->message_summary( $operation['warnings'], true ) ); ?></dd>
+			<dt><?php echo esc_html__( 'Errors', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->message_summary( $operation['errors'], false ) ); ?></dd>
+			<dt><?php echo esc_html__( 'Undo status', 'term-steward' ); ?></dt><dd><?php echo esc_html( $this->undo_state_label( $operation ) ); ?></dd>
 			<?php if ( null !== $operation['parent_operation_id'] && in_array( $operation['status'], array( Status::UNDO_PARTIAL_FAILED->value, Status::FAILED->value ), true ) ) : ?>
-				<dt><?php echo esc_html__( '残っている項目', 'term-steward' ); ?></dt><dd><?php echo esc_html( sprintf( /* translators: %d: remaining Undo item count. */ __( '%d件', 'term-steward' ), $this->remaining_count( $operation ) ) ); ?></dd>
-				<dt><?php echo esc_html__( '再試行', 'term-steward' ); ?></dt><dd><?php echo esc_html__( '自動再試行には対応していません。現在状態を確認してください。', 'term-steward' ); ?></dd>
+				<dt><?php echo esc_html__( 'Remaining items', 'term-steward' ); ?></dt><dd><?php echo esc_html( sprintf( /* translators: %d: remaining Undo item count. */ __( '%d items', 'term-steward' ), $this->remaining_count( $operation ) ) ); ?></dd>
+				<dt><?php echo esc_html__( 'Retry', 'term-steward' ); ?></dt><dd><?php echo esc_html__( 'Automatic retry is not available. Check the current status.', 'term-steward' ); ?></dd>
 			<?php endif; ?>
 			<?php
 			if ( null !== $operation['parent_operation_id'] ) :
 				?>
-				<dt><?php echo esc_html__( '取り消し対象', 'term-steward' ); ?></dt><dd><a href="<?php echo esc_url( $this->history_url( array( 'history_id' => (int) $operation['parent_operation_id'] ) ) ); ?>"><?php echo esc_html__( '元の操作を表示', 'term-steward' ); ?></a></dd><?php endif; ?>
+				<dt><?php echo esc_html__( 'Undo target', 'term-steward' ); ?></dt><dd><a href="<?php echo esc_url( $this->history_url( array( 'history_id' => (int) $operation['parent_operation_id'] ) ) ); ?>"><?php echo esc_html__( 'View original operation', 'term-steward' ); ?></a></dd><?php endif; ?>
 		</dl>
 		<?php $this->render_change_summary( $operation, $changes, $log_counts ); ?>
 		<?php if ( null !== $assessment ) : ?>
-			<h3><?php echo esc_html__( '取り消し可否', 'term-steward' ); ?></h3>
+			<h3><?php echo esc_html__( 'Undo availability', 'term-steward' ); ?></h3>
 			<p><strong><?php echo esc_html( $this->availability_label( (string) $assessment['availability'] ) ); ?></strong><br><?php echo esc_html( $this->reason_label( (string) $assessment['reason'] ) ); ?></p>
 			<?php if ( 'none' !== $assessment['availability'] ) : ?>
-			<form method="post"><input type="hidden" name="view" value="history"><input type="hidden" name="<?php echo esc_attr( self::NONCE_FIELD ); ?>" value="<?php echo esc_attr( wp_create_nonce( self::NONCE_ACTION ) ); ?>"><input type="hidden" name="original_operation_id" value="<?php echo esc_attr( (string) $operation['id'] ); ?>"><input type="hidden" name="taxonomy" value="<?php echo esc_attr( (string) $operation['taxonomy'] ); ?>"><button type="submit" class="button button-secondary term-steward-undo-preview" name="undo_command" value="preview_undo"><?php echo esc_html__( '変更を元に戻す', 'term-steward' ); ?></button></form>
+			<form method="post"><input type="hidden" name="view" value="history"><input type="hidden" name="<?php echo esc_attr( self::NONCE_FIELD ); ?>" value="<?php echo esc_attr( wp_create_nonce( self::NONCE_ACTION ) ); ?>"><input type="hidden" name="original_operation_id" value="<?php echo esc_attr( (string) $operation['id'] ); ?>"><input type="hidden" name="taxonomy" value="<?php echo esc_attr( (string) $operation['taxonomy'] ); ?>"><button type="submit" class="button button-secondary term-steward-undo-preview" name="undo_command" value="preview_undo"><?php echo esc_html__( 'Undo changes', 'term-steward' ); ?></button></form>
 			<?php endif; ?>
 		<?php endif; ?>
 		<?php if ( null !== $operation['parent_operation_id'] && Status::UNDOING->value === $operation['status'] ) : ?>
-			<form method="post" class="term-steward-undo-resume"><input type="hidden" name="view" value="history"><input type="hidden" name="<?php echo esc_attr( self::NONCE_FIELD ); ?>" value="<?php echo esc_attr( wp_create_nonce( self::NONCE_ACTION ) ); ?>"><input type="hidden" name="undo_operation_id" value="<?php echo esc_attr( (string) $operation['id'] ); ?>"><input type="hidden" name="taxonomy" value="<?php echo esc_attr( (string) $operation['taxonomy'] ); ?>"><button type="submit" class="button button-primary" name="undo_command" value="continue_undo"><?php echo esc_html__( '取り消しを再開', 'term-steward' ); ?></button></form>
+			<form method="post" class="term-steward-undo-resume"><input type="hidden" name="view" value="history"><input type="hidden" name="<?php echo esc_attr( self::NONCE_FIELD ); ?>" value="<?php echo esc_attr( wp_create_nonce( self::NONCE_ACTION ) ); ?>"><input type="hidden" name="undo_operation_id" value="<?php echo esc_attr( (string) $operation['id'] ); ?>"><input type="hidden" name="taxonomy" value="<?php echo esc_attr( (string) $operation['taxonomy'] ); ?>"><button type="submit" class="button button-primary" name="undo_command" value="continue_undo"><?php echo esc_html__( 'Resume undo', 'term-steward' ); ?></button></form>
 		<?php endif; ?>
 		<?php
 	}
@@ -299,9 +299,9 @@ final class HistoryPage {
 		}
 		$region_id = 'term-steward-history-logs-' . (int) $operation['id'];
 		?>
-		<section class="term-steward-history-logs" data-operation="<?php echo esc_attr( (string) $operation['id'] ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( self::NONCE_ACTION ) ); ?>" data-error="<?php echo esc_attr__( 'ログを取得できませんでした。もう一度お試しください。', 'term-steward' ); ?>">
-		<h3><?php echo esc_html__( '最近のログ', 'term-steward' ); ?></h3>
-		<p class="term-steward-log-counts"><?php echo esc_html( sprintf( /* translators: 1: total logs, 2: successful logs, 3: warnings, 4: errors. */ __( '全体：%1$d件、成功：%2$d件、警告：%3$d件、エラー：%4$d件', 'term-steward' ), $counts['total'], $counts['success'], $counts['warning'], $counts['error'] ) ); ?></p>
+		<section class="term-steward-history-logs" data-operation="<?php echo esc_attr( (string) $operation['id'] ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( self::NONCE_ACTION ) ); ?>" data-error="<?php echo esc_attr__( 'Could not retrieve the logs. Try again.', 'term-steward' ); ?>">
+		<h3><?php echo esc_html__( 'Recent logs', 'term-steward' ); ?></h3>
+		<p class="term-steward-log-counts"><?php echo esc_html( sprintf( /* translators: 1: total logs, 2: successful logs, 3: warnings, 4: errors. */ __( 'Total: %1$d; successful: %2$d; warnings: %3$d; errors: %4$d', 'term-steward' ), $counts['total'], $counts['success'], $counts['warning'], $counts['error'] ) ); ?></p>
 		<ul id="<?php echo esc_attr( $region_id ); ?>" class="term-steward-change-summary" aria-live="polite">
 		<?php
 		foreach ( $changes as $change ) {
@@ -314,7 +314,7 @@ final class HistoryPage {
 		<?php
 		if ( 5 < $counts['total'] ) :
 			?>
-			<button type="button" class="button-link tt-link-button term-steward-log-toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $region_id ); ?>"><?php echo esc_html__( '詳しく見る', 'term-steward' ); ?></button><?php endif; ?>
+			<button type="button" class="button-link tt-link-button term-steward-log-toggle" aria-expanded="false" aria-controls="<?php echo esc_attr( $region_id ); ?>"><?php echo esc_html__( 'View details', 'term-steward' ); ?></button><?php endif; ?>
 		</section>
 		<?php
 	}
@@ -330,17 +330,17 @@ final class HistoryPage {
 		$previewing = Status::UNDO_PREVIEWED->value === $undo['status'];
 		?>
 		<div class="term-steward term-steward-modal term-steward-history-modal" data-auto-open="1" data-auto-continue="<?php echo $running ? '1' : '0'; ?>" data-ajax-url="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" hidden><div class="term-steward-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="term-steward-undo-heading" tabindex="-1">
-		<header class="term-steward-modal__header"><h2 id="term-steward-undo-heading"><?php echo esc_html( $previewing ? __( '取り消し内容のプレビュー', 'term-steward' ) : __( '取り消し結果', 'term-steward' ) ); ?></h2><button type="button" class="term-steward-modal__close" aria-label="<?php echo esc_attr__( '閉じる', 'term-steward' ); ?>" <?php disabled( $running ); ?>>&times;</button></header>
+		<header class="term-steward-modal__header"><h2 id="term-steward-undo-heading"><?php echo esc_html( $previewing ? __( 'Undo preview', 'term-steward' ) : __( 'Undo result', 'term-steward' ) ); ?></h2><button type="button" class="term-steward-modal__close" aria-label="<?php echo esc_attr__( 'Close', 'term-steward' ); ?>" <?php disabled( $running ); ?>>&times;</button></header>
 		<div class="term-steward-modal__body" aria-live="polite" aria-atomic="true">
 		<?php if ( $previewing ) : ?>
-			<p><?php echo esc_html( sprintf( /* translators: %s: target term names. */ __( '元に戻す対象：%s', 'term-steward' ), $this->undo_target_label( $undo ) ) ); ?></p>
-			<p><?php echo esc_html( sprintf( /* translators: %s: taxonomy label. */ __( '対象：%s', 'term-steward' ), $this->taxonomy_label( (string) $undo['taxonomy'] ) ) ); ?></p>
+			<p><?php echo esc_html( sprintf( /* translators: %s: target term names. */ __( 'Undo target: %s', 'term-steward' ), $this->undo_target_label( $undo ) ) ); ?></p>
+			<p><?php echo esc_html( sprintf( /* translators: %s: taxonomy label. */ __( 'Target: %s', 'term-steward' ), $this->taxonomy_label( (string) $undo['taxonomy'] ) ) ); ?></p>
 			<p><strong><?php echo esc_html( $this->availability_label( (string) $preview['availability'] ) ); ?></strong></p>
-			<p><?php echo esc_html( sprintf( /* translators: 1: restored terms, 2: restored assignments, 3: removed assignments. */ __( '復元される分類 %1$d件、復元される投稿割り当て %2$d件、削除される割り当て %3$d件', 'term-steward' ), (int) $preview['restore_terms'], (int) $preview['restore_assignments'], (int) $preview['remove_assignments'] ) ); ?></p>
+			<p><?php echo esc_html( sprintf( /* translators: 1: restored terms, 2: restored assignments, 3: removed assignments. */ __( 'Terms to restore: %1$d; assignments to restore: %2$d; assignments to remove: %3$d', 'term-steward' ), (int) $preview['restore_terms'], (int) $preview['restore_assignments'], (int) $preview['remove_assignments'] ) ); ?></p>
 			<?php
 			if ( array() !== (array) $preview['conflicts'] ) :
 				?>
-				<p class="term-steward-message term-steward-message--warning"><?php echo esc_html( sprintf( /* translators: %d: conflict count. */ __( '競合により元に戻せない項目が%d件あります。', 'term-steward' ), count( $preview['conflicts'] ) ) ); ?></p>
+				<p class="term-steward-message term-steward-message--warning"><?php echo esc_html( sprintf( /* translators: %d: conflict count. */ __( '%d items cannot be undone because of conflicts.', 'term-steward' ), count( $preview['conflicts'] ) ) ); ?></p>
 				<ul class="term-steward-conflicts">
 				<?php foreach ( $preview['conflicts'] as $conflict ) : ?>
 					<li><strong><?php echo esc_html( $this->conflict_target_label( (string) $conflict['type'] ) ); ?></strong><br><?php echo esc_html( $this->conflict_plan_label( (string) $conflict['type'] ) ); ?><br><?php echo esc_html( $this->conflict_current_label( (string) $conflict['reason'] ) ); ?></li>
@@ -350,15 +350,15 @@ final class HistoryPage {
 		<?php else : ?>
 			<p><strong><?php echo esc_html( $this->status_label( (string) $undo['status'] ) ); ?></strong></p>
 			<?php $progress = is_array( $undo['progress'] ?? null ) ? $undo['progress'] : (array) $undo['result_data']; ?>
-			<p class="term-steward-undo-progress"><?php echo esc_html( sprintf( /* translators: 1: completed count, 2: total count, 3: failed count, 4: remaining count. */ __( '進捗：%1$d / %2$d、成功：%1$d件、失敗：%3$d件、残り：%4$d件', 'term-steward' ), (int) ( $progress['completed'] ?? 0 ), (int) ( $progress['total'] ?? 0 ), (int) ( $progress['failed'] ?? 0 ), (int) ( $progress['pending'] ?? 0 ) ) ); ?></p>
+			<p class="term-steward-undo-progress"><?php echo esc_html( sprintf( /* translators: 1: completed count, 2: total count, 3: failed count, 4: remaining count. */ __( 'Progress: %1$d / %2$d; successful: %1$d; failed: %3$d; remaining: %4$d', 'term-steward' ), (int) ( $progress['completed'] ?? 0 ), (int) ( $progress['total'] ?? 0 ), (int) ( $progress['failed'] ?? 0 ), (int) ( $progress['pending'] ?? 0 ) ) ); ?></p>
 		<?php endif; ?>
 		</div>
-		<footer class="term-steward-modal__footer"><button type="button" class="button tt-button tt-button--secondary term-steward-modal__cancel" <?php disabled( $running ); ?>><?php echo esc_html__( 'キャンセル', 'term-steward' ); ?></button>
+		<footer class="term-steward-modal__footer"><button type="button" class="button tt-button tt-button--secondary term-steward-modal__cancel" <?php disabled( $running ); ?>><?php echo esc_html__( 'Cancel', 'term-steward' ); ?></button>
 		<form method="post"><input type="hidden" name="view" value="history"><input type="hidden" name="<?php echo esc_attr( self::NONCE_FIELD ); ?>" value="<?php echo esc_attr( wp_create_nonce( self::NONCE_ACTION ) ); ?>"><input type="hidden" name="undo_operation_id" value="<?php echo esc_attr( (string) $undo['id'] ); ?>"><input type="hidden" name="taxonomy" value="<?php echo esc_attr( (string) $undo['taxonomy'] ); ?>">
 		<?php
 		if ( $previewing ) :
 			?>
-			<button type="submit" class="button button-primary tt-button tt-button--primary" name="undo_command" value="run_undo"><?php echo esc_html__( '元に戻す', 'term-steward' ); ?></button>
+			<button type="submit" class="button button-primary tt-button tt-button--primary" name="undo_command" value="run_undo"><?php echo esc_html__( 'Undo', 'term-steward' ); ?></button>
 			<?php
 			endif;
 		?>
@@ -382,13 +382,13 @@ final class HistoryPage {
 				'current'   => (int) $history['page'],
 				'total'     => (int) $history['total_pages'],
 				'type'      => 'list',
-				'prev_text' => __( '前へ', 'term-steward' ),
-				'next_text' => __( '次へ', 'term-steward' ),
+				'prev_text' => __( 'Previous', 'term-steward' ),
+				'next_text' => __( 'Next', 'term-steward' ),
 			)
 		);
 		if ( is_string( $links ) ) {
 			?>
-			<nav class="tablenav-pages" aria-label="<?php echo esc_attr__( '操作履歴のページ送り', 'term-steward' ); ?>"><?php echo wp_kses_post( $links ); ?></nav>
+			<nav class="tablenav-pages" aria-label="<?php echo esc_attr__( 'Operation history pagination', 'term-steward' ); ?>"><?php echo wp_kses_post( $links ); ?></nav>
 			<?php
 		}
 	}
@@ -430,18 +430,18 @@ final class HistoryPage {
 	 */
 	private function action_summary( array $operation ): string {
 		if ( null !== $operation['parent_operation_id'] ) {
-			return __( '取り消し', 'term-steward' );
+			return __( 'Undo', 'term-steward' );
 		}
 		$actions = array_unique( array_column( (array) ( $operation['requested_data']['plan'] ?? array() ), 'action' ) );
 		$labels  = array_map(
 			static fn( string $action ): string => match ( $action ) {
-				Action::RENAME->value => __( '名称変更', 'term-steward' ),
-				Action::MERGE->value => __( '統合', 'term-steward' ),
-				default => __( '削除', 'term-steward' ),
+				Action::RENAME->value => __( 'Rename', 'term-steward' ),
+				Action::MERGE->value => __( 'Merge', 'term-steward' ),
+				default => __( 'Delete', 'term-steward' ),
 			},
 			$actions
 		);
-		return array() === $labels ? __( '実行済み操作', 'term-steward' ) : implode( '、', $labels );
+		return array() === $labels ? __( 'Completed operation', 'term-steward' ) : implode( '、', $labels );
 	}
 
 	/**
@@ -484,7 +484,7 @@ final class HistoryPage {
 				}
 			}
 		}
-		return array() === $names ? __( '記録なし', 'term-steward' ) : implode( '、', array_unique( $names ) );
+		return array() === $names ? __( 'No record', 'term-steward' ) : implode( '、', array_unique( $names ) );
 	}
 
 	/**
@@ -494,7 +494,7 @@ final class HistoryPage {
 	 */
 	private function undo_target_label( array $undo ): string {
 		$original = $this->operations->find( (int) ( $undo['parent_operation_id'] ?? 0 ) );
-		return null === $original ? __( '記録なし', 'term-steward' ) : $this->target_label( $original );
+		return null === $original ? __( 'No record', 'term-steward' ) : $this->target_label( $original );
 	}
 
 	/**
@@ -534,9 +534,9 @@ final class HistoryPage {
 	 */
 	private function severity_label( string $type ): string {
 		return match ( $this->change_severity( $type ) ) {
-			'error' => __( '失敗：', 'term-steward' ),
-			'warning' => __( '警告：', 'term-steward' ),
-			default => __( '成功：', 'term-steward' ),
+			'error' => __( 'Failed: ', 'term-steward' ),
+			'warning' => __( 'Warning: ', 'term-steward' ),
+			default => __( 'Success: ', 'term-steward' ),
 		};
 	}
 
@@ -571,15 +571,15 @@ final class HistoryPage {
 	 */
 	private function status_label( string $status ): string {
 		return match ( $status ) {
-			Status::RUNNING->value => __( '実行中', 'term-steward' ),
-			Status::COMPLETED->value => __( '完了', 'term-steward' ),
-			Status::PARTIAL_FAILED->value => __( '一部失敗', 'term-steward' ),
-			Status::FAILED->value => __( '失敗', 'term-steward' ),
-			Status::UNDO_PREVIEWED->value => __( '取り消し確認済み', 'term-steward' ),
-			Status::UNDOING->value => __( '取り消し中', 'term-steward' ),
-			Status::UNDONE->value => __( '取り消し済み', 'term-steward' ),
-			Status::UNDO_PARTIAL_FAILED->value => __( '一部のみ取り消し', 'term-steward' ),
-			default => __( '未実行', 'term-steward' ),
+			Status::RUNNING->value => __( 'Running', 'term-steward' ),
+			Status::COMPLETED->value => __( 'Completed', 'term-steward' ),
+			Status::PARTIAL_FAILED->value => __( 'Partially failed', 'term-steward' ),
+			Status::FAILED->value => __( 'Failed', 'term-steward' ),
+			Status::UNDO_PREVIEWED->value => __( 'Undo previewed', 'term-steward' ),
+			Status::UNDOING->value => __( 'Undoing', 'term-steward' ),
+			Status::UNDONE->value => __( 'Undone', 'term-steward' ),
+			Status::UNDO_PARTIAL_FAILED->value => __( 'Partially undone', 'term-steward' ),
+			default => __( 'Not run', 'term-steward' ),
 		};
 	}
 
@@ -590,9 +590,9 @@ final class HistoryPage {
 	 */
 	private function availability_label( string $availability ): string {
 		return match ( $availability ) {
-			'full' => __( '完全に取り消せる', 'term-steward' ),
-			'partial' => __( '一部のみ取り消せる', 'term-steward' ),
-			default => __( '取り消し不可', 'term-steward' ),
+			'full' => __( 'Fully undoable', 'term-steward' ),
+			'partial' => __( 'Partially undoable', 'term-steward' ),
+			default => __( 'Cannot be undone', 'term-steward' ),
 		};
 	}
 
@@ -603,10 +603,10 @@ final class HistoryPage {
 	 */
 	private function undo_result_label( array $operation ): string {
 		return match ( (string) $operation['status'] ) {
-			Status::UNDONE->value => __( '取り消し済み', 'term-steward' ),
-			Status::UNDO_PARTIAL_FAILED->value => __( '一部のみ取り消し', 'term-steward' ),
-			Status::UNDOING->value => __( '取り消し中', 'term-steward' ),
-			default => __( '取り消し失敗', 'term-steward' ),
+			Status::UNDONE->value => __( 'Undone', 'term-steward' ),
+			Status::UNDO_PARTIAL_FAILED->value => __( 'Partially undone', 'term-steward' ),
+			Status::UNDOING->value => __( 'Undoing', 'term-steward' ),
+			default => __( 'Undo failed', 'term-steward' ),
 		};
 	}
 
@@ -617,12 +617,12 @@ final class HistoryPage {
 	 */
 	private function reason_label( string $reason ): string {
 		return match ( $reason ) {
-			'state_matches' => __( '現在の状態が実行直後と一致しています。', 'term-steward' ),
-			'some_conflicts' => __( '現在の状態と一致しない項目は変更せず、安全な項目だけを元に戻せます。', 'term-steward' ),
-			'journal_missing' => __( '復元に必要な変更履歴が保存されていません。', 'term-steward' ),
-			'undo_already_started' => __( 'この操作の取り消しはすでに開始されています。', 'term-steward' ),
-			'status_not_undoable' => __( '現在の操作状態では取り消しを開始できません。', 'term-steward' ),
-			default => __( '現在の状態では安全に元へ戻せません。', 'term-steward' ),
+			'state_matches' => __( 'The current state matches the state immediately after execution.', 'term-steward' ),
+			'some_conflicts' => __( 'Items that no longer match will remain unchanged; only safe items can be undone.', 'term-steward' ),
+			'journal_missing' => __( 'The change history required for restoration is unavailable.', 'term-steward' ),
+			'undo_already_started' => __( 'Undo has already started for this operation.', 'term-steward' ),
+			'status_not_undoable' => __( 'Undo cannot start from the current operation status.', 'term-steward' ),
+			default => __( 'The current state cannot be safely restored.', 'term-steward' ),
 		};
 	}
 
@@ -632,7 +632,7 @@ final class HistoryPage {
 	 * @param string $taxonomy Stored taxonomy.
 	 */
 	private function taxonomy_label( string $taxonomy ): string {
-		return Taxonomy::CATEGORY->value === $taxonomy ? __( 'カテゴリー', 'term-steward' ) : __( 'タグ', 'term-steward' );
+		return Taxonomy::CATEGORY->value === $taxonomy ? __( 'Category', 'term-steward' ) : __( 'Tag', 'term-steward' );
 	}
 
 	/**
@@ -656,23 +656,23 @@ final class HistoryPage {
 	 */
 	private function message_summary( mixed $messages, bool $warning ): string {
 		if ( ! is_array( $messages ) || array() === $messages ) {
-			return __( 'なし', 'term-steward' );
+			return __( 'None', 'term-steward' );
 		}
 		$parts = array();
 		foreach ( $messages as $key => $value ) {
 			$count = is_numeric( $value ) ? (int) $value : 1;
 			if ( 'source_retained' === $key ) {
-				$parts[] = sprintf( /* translators: %d: retained term count. */ __( '安全のため分類を保持：%d件', 'term-steward' ), $count );
+				$parts[] = sprintf( /* translators: %d: retained term count. */ __( 'Terms retained for safety: %d', 'term-steward' ), $count );
 			} elseif ( 'conflicts' === $key ) {
-				$parts[] = sprintf( /* translators: %d: conflict count. */ __( '競合：%d件', 'term-steward' ), $count );
+				$parts[] = sprintf( /* translators: %d: conflict count. */ __( 'Conflicts: %d', 'term-steward' ), $count );
 			} elseif ( 'item_failures' === $key ) {
-				$parts[] = sprintf( /* translators: %d: failed item count. */ __( '処理失敗：%d件', 'term-steward' ), $count );
+				$parts[] = sprintf( /* translators: %d: failed item count. */ __( 'Failed items: %d', 'term-steward' ), $count );
 			} elseif ( 'start_failure' === $key ) {
-				$parts[] = __( 'すべての対象を処理できなかったため、操作を開始せず失敗として終了しました。操作計画を作り直し、変更内容をもう一度確認してください。', 'term-steward' );
+				$parts[] = __( 'No target could be processed, so the operation did not start and ended as failed. Recreate the plan and review the changes again.', 'term-steward' );
 			} else {
 				$parts[] = $warning
-					? sprintf( /* translators: %d: warning count. */ __( '警告：%d件', 'term-steward' ), $count )
-					: sprintf( /* translators: %d: error count. */ __( 'エラー：%d件', 'term-steward' ), $count );
+					? sprintf( /* translators: %d: warning count. */ __( 'Warnings: %d', 'term-steward' ), $count )
+					: sprintf( /* translators: %d: error count. */ __( 'Errors: %d', 'term-steward' ), $count );
 			}
 		}
 		return implode( '、', $parts );
@@ -688,7 +688,7 @@ final class HistoryPage {
 			return $this->status_label( (string) $operation['status'] );
 		}
 		$undos = $this->operations->started_undos( (int) $operation['id'] );
-		return array() === $undos ? __( '未実行', 'term-steward' ) : $this->status_label( (string) $undos[0]['status'] );
+		return array() === $undos ? __( 'Not run', 'term-steward' ) : $this->status_label( (string) $undos[0]['status'] );
 	}
 
 	/**
@@ -707,7 +707,7 @@ final class HistoryPage {
 	 * @param string $type Journal change type.
 	 */
 	private function conflict_target_label( string $type ): string {
-		return 'merge_relationship' === $type ? __( '対象投稿の割り当て', 'term-steward' ) : __( '対象の分類', 'term-steward' );
+		return 'merge_relationship' === $type ? __( 'Target post assignment', 'term-steward' ) : __( 'Target term', 'term-steward' );
 	}
 
 	/**
@@ -717,10 +717,10 @@ final class HistoryPage {
 	 */
 	private function conflict_plan_label( string $type ): string {
 		return match ( $type ) {
-			'name_changed' => __( '予定していた復元：元の名前へ戻す', 'term-steward' ),
-			'slug_changed' => __( '予定していた復元：元のスラッグへ戻す', 'term-steward' ),
-			'merge_relationship' => __( '予定していた復元：元の投稿割り当てへ戻す', 'term-steward' ),
-			default => __( '予定していた復元：削除された分類を再作成する', 'term-steward' ),
+			'name_changed' => __( 'Planned restoration: restore the original name', 'term-steward' ),
+			'slug_changed' => __( 'Planned restoration: restore the original slug', 'term-steward' ),
+			'merge_relationship' => __( 'Planned restoration: restore the original post assignment', 'term-steward' ),
+			default => __( 'Planned restoration: recreate the deleted term', 'term-steward' ),
 		};
 	}
 
@@ -731,12 +731,12 @@ final class HistoryPage {
 	 */
 	private function conflict_current_label( string $reason ): string {
 		return match ( $reason ) {
-			'term_or_slug_exists', 'value_conflict' => __( '現在状態：同じ名前またはスラッグが使用されています。変更しません。', 'term-steward' ),
-			'parent_missing' => __( '現在状態：元の親カテゴリーが存在しません。変更しません。', 'term-steward' ),
-			'post_missing_or_changed' => __( '現在状態：対象投稿が存在しないか公開済み標準投稿ではありません。変更しません。', 'term-steward' ),
-			'assignment_changed' => __( '現在状態：投稿の割り当てが実行直後から変更されています。変更しません。', 'term-steward' ),
-			'source_changed', 'destination_changed', 'value_changed' => __( '現在状態：分類が実行直後から変更されています。変更しません。', 'term-steward' ),
-			default => __( '現在状態：安全な復元に必要な情報を確認できません。変更しません。', 'term-steward' ),
+			'term_or_slug_exists', 'value_conflict' => __( 'Current state: the same name or slug is in use. No changes were made.', 'term-steward' ),
+			'parent_missing' => __( 'Current state: the original parent category no longer exists. No changes were made.', 'term-steward' ),
+			'post_missing_or_changed' => __( 'Current state: the target post is missing or is not a published standard post. No changes were made.', 'term-steward' ),
+			'assignment_changed' => __( 'Current state: the post assignment changed after execution. No changes were made.', 'term-steward' ),
+			'source_changed', 'destination_changed', 'value_changed' => __( 'Current state: the term changed after execution. No changes were made.', 'term-steward' ),
+			default => __( 'Current state: the information required for safe restoration could not be verified. No changes were made.', 'term-steward' ),
 		};
 	}
 
@@ -750,22 +750,22 @@ final class HistoryPage {
 		$payload = is_array( $change['item_payload'] ?? null ) ? $change['item_payload'] : array();
 		$source  = (array) ( $payload['source_snapshot'] ?? $payload['snapshot'] ?? $payload['before'] ?? array() );
 		$target  = (string) ( $source['name'] ?? '' );
-		$name    = '' === $target ? __( '対象の分類', 'term-steward' ) : sprintf( /* translators: %s: term name. */ __( '分類「%s」', 'term-steward' ), $target );
+		$name    = '' === $target ? __( 'Target term', 'term-steward' ) : sprintf( /* translators: %s: term name. */ __( 'Term "%s"', 'term-steward' ), $target );
 		return match ( $type ) {
-			'name_changed' => sprintf( /* translators: 1: old name, 2: new name. */ __( '名前を「%1$s」から「%2$s」へ変更しました。', 'term-steward' ), (string) ( $change['before_data']['name'] ?? '' ), (string) ( $change['after_data']['name'] ?? '' ) ),
-			'slug_changed' => sprintf( /* translators: 1: term label, 2: old slug, 3: new slug. */ __( '%1$sのスラッグを「%2$s」から「%3$s」へ変更しました。', 'term-steward' ), $name, (string) ( $change['before_data']['slug'] ?? '' ), (string) ( $change['after_data']['slug'] ?? '' ) ),
-			'destination_added' => sprintf( /* translators: %s: source term label. */ __( '%sを統合し、統合先の投稿割り当てを追加しました。', 'term-steward' ), $name ),
-			'destination_existing' => sprintf( /* translators: %s: source term label. */ __( '%sの統合先はすでに投稿へ割り当てられていました。', 'term-steward' ), $name ),
-			'source_removed' => sprintf( /* translators: %s: source term label. */ __( '%sの投稿割り当てを統合元から削除しました。', 'term-steward' ), $name ),
-			'source_deleted', 'term_deleted' => sprintf( /* translators: %s: deleted term name. */ __( '分類「%s」を削除', 'term-steward' ), (string) ( $change['before_data']['name'] ?? '' ) ),
-			'term_restored' => sprintf( /* translators: %s: restored term name. */ __( '分類「%s」を復元', 'term-steward' ), (string) ( $change['after_data']['name'] ?? '' ) ),
-			'source_restored' => sprintf( /* translators: %s: source term label. */ __( '%sの投稿割り当てを復元しました。', 'term-steward' ), $name ),
-			'destination_removed' => sprintf( /* translators: %s: source term label. */ __( '%sの元操作が追加した統合先の割り当てを削除しました。', 'term-steward' ), $name ),
-			'name_restored' => sprintf( /* translators: %s: restored name. */ __( '名前を「%s」へ復元しました。', 'term-steward' ), (string) ( $change['after_data']['name'] ?? '' ) ),
-			'slug_restored' => sprintf( /* translators: 1: term label, 2: restored slug. */ __( '%1$sのスラッグを「%2$s」へ復元しました。', 'term-steward' ), $name, (string) ( $change['after_data']['slug'] ?? '' ) ),
-			'source_retained' => sprintf( /* translators: %s: retained term label. */ __( '%sは安全条件を満たさないため保持しました。', 'term-steward' ), $name ),
-			'item_failed', 'undo_item_failed' => sprintf( /* translators: %s: failed term label. */ __( '%sは競合または状態変更のため処理できませんでした。', 'term-steward' ), $name ),
-			default => __( '処理結果を記録しました。', 'term-steward' ),
+			'name_changed' => sprintf( /* translators: 1: old name, 2: new name. */ __( 'Changed the name from "%1$s" to "%2$s".', 'term-steward' ), (string) ( $change['before_data']['name'] ?? '' ), (string) ( $change['after_data']['name'] ?? '' ) ),
+			'slug_changed' => sprintf( /* translators: 1: term label, 2: old slug, 3: new slug. */ __( 'Changed the slug for %1$s from "%2$s" to "%3$s".', 'term-steward' ), $name, (string) ( $change['before_data']['slug'] ?? '' ), (string) ( $change['after_data']['slug'] ?? '' ) ),
+			'destination_added' => sprintf( /* translators: %s: source term label. */ __( 'Merged %s and added the destination post assignment.', 'term-steward' ), $name ),
+			'destination_existing' => sprintf( /* translators: %s: source term label. */ __( 'The merge destination for %s was already assigned to the post.', 'term-steward' ), $name ),
+			'source_removed' => sprintf( /* translators: %s: source term label. */ __( 'Removed the post assignment from source %s.', 'term-steward' ), $name ),
+			'source_deleted', 'term_deleted' => sprintf( /* translators: %s: deleted term name. */ __( 'Deleted term "%s"', 'term-steward' ), (string) ( $change['before_data']['name'] ?? '' ) ),
+			'term_restored' => sprintf( /* translators: %s: restored term name. */ __( 'Restored term "%s"', 'term-steward' ), (string) ( $change['after_data']['name'] ?? '' ) ),
+			'source_restored' => sprintf( /* translators: %s: source term label. */ __( 'Restored the post assignment for %s.', 'term-steward' ), $name ),
+			'destination_removed' => sprintf( /* translators: %s: source term label. */ __( 'Removed the destination assignment added by the original operation for %s.', 'term-steward' ), $name ),
+			'name_restored' => sprintf( /* translators: %s: restored name. */ __( 'Restored the name to "%s".', 'term-steward' ), (string) ( $change['after_data']['name'] ?? '' ) ),
+			'slug_restored' => sprintf( /* translators: 1: term label, 2: restored slug. */ __( 'Restored the slug for %1$s to "%2$s".', 'term-steward' ), $name, (string) ( $change['after_data']['slug'] ?? '' ) ),
+			'source_retained' => sprintf( /* translators: %s: retained term label. */ __( '%s was retained because the safety conditions were not met.', 'term-steward' ), $name ),
+			'item_failed', 'undo_item_failed' => sprintf( /* translators: %s: failed term label. */ __( '%s could not be processed because of a conflict or state change.', 'term-steward' ), $name ),
+			default => __( 'Recorded the processing result.', 'term-steward' ),
 		};
 	}
 
@@ -776,15 +776,15 @@ final class HistoryPage {
 	 */
 	private function error_label( string $code ): string {
 		return match ( $code ) {
-			'invalid_nonce' => __( '操作の有効期限が切れました。画面を更新して再試行してください。', 'term-steward' ),
-			UndoErrorCode::NOT_AVAILABLE => __( 'この操作は安全に元へ戻せません。', 'term-steward' ),
-			UndoErrorCode::STALE_PREVIEW => __( '確認後に状態が変わったため、取り消しを開始しませんでした。もう一度確認してください。', 'term-steward' ),
-			UndoErrorCode::LOCKED => __( '別の処理が実行中です。しばらくしてから再試行してください。', 'term-steward' ),
-			UndoErrorCode::IN_PROGRESS => __( 'すでに取り消し処理を実行中です。操作履歴から現在の状態を確認してください。', 'term-steward' ),
-			UndoErrorCode::ALREADY_UNDONE => __( 'この操作はすでに取り消されています。', 'term-steward' ),
-			UndoErrorCode::NOT_RESUMABLE => __( 'この取り消し処理は完了状態のため、もう一度開始できません。操作履歴で結果を確認してください。', 'term-steward' ),
-			UndoErrorCode::DUPLICATE => __( 'この操作には複数の取り消し記録があるため、安全を確認できません。新しい取り消しは開始しませんでした。', 'term-steward' ),
-			default => __( '操作履歴または取り消し処理を確認できませんでした。', 'term-steward' ),
+			'invalid_nonce' => __( 'This action has expired. Refresh the page and try again.', 'term-steward' ),
+			UndoErrorCode::NOT_AVAILABLE => __( 'This operation cannot be safely undone.', 'term-steward' ),
+			UndoErrorCode::STALE_PREVIEW => __( 'The state changed after the preview, so undo did not start. Review it again.', 'term-steward' ),
+			UndoErrorCode::LOCKED => __( 'Another operation is running. Try again later.', 'term-steward' ),
+			UndoErrorCode::IN_PROGRESS => __( 'Undo is already running. Check its current status in operation history.', 'term-steward' ),
+			UndoErrorCode::ALREADY_UNDONE => __( 'This operation has already been undone.', 'term-steward' ),
+			UndoErrorCode::NOT_RESUMABLE => __( 'This undo process is complete and cannot be started again. Check the result in operation history.', 'term-steward' ),
+			UndoErrorCode::DUPLICATE => __( 'Multiple undo records exist for this operation, so safety could not be verified. A new undo was not started.', 'term-steward' ),
+			default => __( 'The operation history or undo process could not be verified.', 'term-steward' ),
 		};
 	}
 

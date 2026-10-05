@@ -55,7 +55,7 @@ final class UndoAjaxTest extends WP_Ajax_UnitTestCase {
 		$this->assertIsArray( $response );
 		$this->assertFalse( $response['success'] );
 		$this->assertFalse( $response['data']['retryable'] );
-		$this->assertSame( 'セッションまたは認証情報が無効になりました。ページを再読み込みし、必要に応じて再ログインしてから操作を再開してください。', $response['data']['message'] );
+		$this->assertSame( 'Your session or credentials are no longer valid. Reload the page, sign in again if needed, and resume the operation.', $response['data']['message'] );
 		$this->assertSame( array( 0, 0, 0 ), $this->table_counts() );
 	}
 

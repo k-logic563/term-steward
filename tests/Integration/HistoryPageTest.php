@@ -105,11 +105,11 @@ final class HistoryPageTest extends WP_UnitTestCase {
 		( new Page() )->render();
 		$output = (string) ob_get_clean();
 
-		$this->assertStringContainsString( '実行中', $output );
-		$this->assertStringContainsString( '完了', $output );
-		$this->assertStringContainsString( 'role="region" aria-label="操作履歴一覧"', $output );
-		$this->assertStringContainsString( '<th scope="col">実行日時</th>', $output );
-		$this->assertStringContainsString( '<th scope="col"><span class="screen-reader-text">詳細</span></th>', $output );
+		$this->assertStringContainsString( 'Running', $output );
+		$this->assertStringContainsString( 'Completed', $output );
+		$this->assertStringContainsString( 'role="region" aria-label="Operation history list"', $output );
+		$this->assertStringContainsString( '<th scope="col">Started</th>', $output );
+		$this->assertStringContainsString( '<th scope="col"><span class="screen-reader-text">Details</span></th>', $output );
 		$this->assertStringContainsString( 'history_id=' . $running, $output );
 		$this->assertStringContainsString( 'history_id=' . $complete, $output );
 		$this->assertStringNotContainsString( 'history_id=' . $draft, $output );
@@ -134,8 +134,8 @@ final class HistoryPageTest extends WP_UnitTestCase {
 		( new Page() )->render();
 		$output = (string) ob_get_clean();
 
-		$this->assertStringContainsString( '操作履歴または取り消し処理を確認できませんでした。', $output );
-		$this->assertStringNotContainsString( '操作 #' . $other . ' の詳細', $output );
+		$this->assertStringContainsString( 'The operation history or undo process could not be verified.', $output );
+		$this->assertStringNotContainsString( 'Operation #' . $other . ' details', $output );
 	}
 
 	/** The lazy log service rejects an operation ID owned by another administrator. */
@@ -172,7 +172,7 @@ final class HistoryPageTest extends WP_UnitTestCase {
 		( new Page() )->render();
 		$output = (string) ob_get_clean();
 
-		$this->assertStringContainsString( '操作の有効期限が切れました。', $output );
+		$this->assertStringContainsString( 'This action has expired.', $output );
 		$this->assertCount( 1, $repository->history( $user_id, 1, 20 )['items'] );
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- Assertion against the isolated custom audit table.
 		$this->assertSame( 1, (int) $GLOBALS['wpdb']->get_var( $GLOBALS['wpdb']->prepare( 'SELECT COUNT(*) FROM %i', Tables::operations( $GLOBALS['wpdb'] ) ) ) );
@@ -212,11 +212,11 @@ final class HistoryPageTest extends WP_UnitTestCase {
 		$output = (string) ob_get_clean();
 
 		$this->assertStringContainsString( 'role="dialog"', $output );
-		$this->assertStringContainsString( '取り消し内容のプレビュー', $output );
-		$this->assertStringContainsString( '元に戻す対象：', $output );
-		$this->assertStringNotContainsString( '元に戻す操作：#', $output );
-		$this->assertStringContainsString( '>キャンセル</button>', $output );
-		$this->assertStringContainsString( 'name="undo_command" value="run_undo">元に戻す</button>', $output );
+		$this->assertStringContainsString( 'Undo preview', $output );
+		$this->assertStringContainsString( 'Undo target:', $output );
+		$this->assertStringNotContainsString( 'Undo operation: #', $output );
+		$this->assertStringContainsString( '>Cancel</button>', $output );
+		$this->assertStringContainsString( 'name="undo_command" value="run_undo">Undo</button>', $output );
 		$this->assertCount( 1, $repository->history( $user_id, 1, 20 )['items'] );
 		$this->assertSame( array(), $repository->started_undos( $original ) );
 	}
@@ -245,9 +245,9 @@ final class HistoryPageTest extends WP_UnitTestCase {
 		$output = (string) ob_get_clean();
 
 		$this->assertSame( 5, substr_count( $output, '<li class="term-steward-log ' ) );
-		$this->assertStringContainsString( '全体：6件、成功：4件、警告：1件、エラー：1件', $output );
+		$this->assertStringContainsString( 'Total: 6; successful: 4; warnings: 1; errors: 1', $output );
 		$this->assertStringContainsString( 'aria-expanded="false"', $output );
-		$this->assertStringContainsString( '>詳しく見る</button>', $output );
+		$this->assertStringContainsString( '>View details</button>', $output );
 		$this->assertStringNotContainsString( 'term_taxonomy_id', $output );
 		$this->assertStringNotContainsString( 'item_failed', $output );
 	}

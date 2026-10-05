@@ -121,18 +121,18 @@ final class InventoryPaginationTest extends WP_UnitTestCase {
 			)
 		);
 		$this->assertSame( 20, $this->table_row_count( $output ) );
-		$this->assertSame( 2, substr_count( $output, '全45件中 21〜40件を表示' ) );
-		$this->assertSame( 2, substr_count( $output, 'aria-current="page" aria-label="2ページ目"' ) );
+		$this->assertSame( 2, substr_count( $output, 'Showing 21–40 of 45 items' ) );
+		$this->assertSame( 2, substr_count( $output, 'aria-current="page" aria-label="Page 2"' ) );
 		$this->assertSame( 2, substr_count( $output, 'class="tablenav-pages term-steward-pagination"' ) );
 		$this->assertStringContainsString( 'class="manage-column sorted desc" aria-sort="descending"', $output );
 		$this->assertStringContainsString( 'class="manage-column sortable asc"', $output );
 		$this->assertStringContainsString( 'orderby=name', $output );
 		$this->assertStringContainsString( 'order=asc', $output );
 		$this->assertSame( 2, substr_count( $output, 'name="per_page" form="term-steward-page-size-' ) );
-		$this->assertSame( 2, substr_count( $output, '>適用</button>' ) );
+		$this->assertSame( 2, substr_count( $output, '>Apply</button>' ) );
 		$this->assertLessThan( strpos( $output, 'term-steward-inventory-table' ), strpos( $output, 'term-steward-table-nav--top' ) );
 		$this->assertLessThan( strpos( $output, 'term-steward-table-nav--bottom' ), strpos( $output, 'term-steward-inventory-table' ) );
-		$this->assertStringNotContainsString( '>表示件数<', $this->filter_panel( $output ) );
+		$this->assertStringNotContainsString( '>Items per page<', $this->filter_panel( $output ) );
 		preg_match_all( '/\bid="([^"]+)"/', $output, $ids );
 		$this->assertCount( count( array_unique( $ids[1] ) ), $ids[1] );
 		preg_match_all( '/<\/?form\b[^>]*>/', $output, $forms );
@@ -161,12 +161,12 @@ final class InventoryPaginationTest extends WP_UnitTestCase {
 			$this->assertArrayNotHasKey( 'nonce', $query );
 			$labels[ $link[2] ] = $query['paged'];
 		}
-		$this->assertSame( '1', $labels['最初のページへ'] );
-		$this->assertSame( '1', $labels['前のページへ'] );
-		$this->assertSame( '3', $labels['次のページへ'] );
-		$this->assertSame( '3', $labels['最後のページへ'] );
-		$this->assertSame( '1', $labels['1ページへ'] );
-		$this->assertSame( '3', $labels['3ページへ'] );
+		$this->assertSame( '1', $labels['Go to the first page'] );
+		$this->assertSame( '1', $labels['Go to the previous page'] );
+		$this->assertSame( '3', $labels['Go to the next page'] );
+		$this->assertSame( '3', $labels['Go to the last page'] );
+		$this->assertSame( '1', $labels['Go to page 1'] );
+		$this->assertSame( '3', $labels['Go to page 3'] );
 		$this->assertStringNotContainsString( 'name="paged"', $output );
 		foreach ( array( 'top', 'bottom' ) as $position ) {
 			$this->assertSame( 1, preg_match( '/<form id="term-steward-page-size-' . $position . '-form"[^>]*>(.*?)<\/form>/s', $output, $form_match ) );
@@ -185,7 +185,7 @@ final class InventoryPaginationTest extends WP_UnitTestCase {
 				'per_page' => '50',
 			)
 		);
-		$this->assertStringContainsString( '全45件中 1〜45件を表示', $changed_size );
+		$this->assertStringContainsString( 'Showing 1–45 of 45 items', $changed_size );
 		$this->assertSame( 45, $this->table_row_count( $changed_size ) );
 		$negative_page = $this->render_page(
 			array(
@@ -194,7 +194,7 @@ final class InventoryPaginationTest extends WP_UnitTestCase {
 				'paged'    => '-2',
 			)
 		);
-		$this->assertStringContainsString( '全45件中 1〜20件を表示', $negative_page );
+		$this->assertStringContainsString( 'Showing 1–20 of 45 items', $negative_page );
 		$overflow_page = $this->render_page(
 			array(
 				'taxonomy' => 'post_tag',
@@ -202,7 +202,7 @@ final class InventoryPaginationTest extends WP_UnitTestCase {
 				'paged'    => '999',
 			)
 		);
-		$this->assertStringContainsString( '全45件中 41〜45件を表示', $overflow_page );
+		$this->assertStringContainsString( 'Showing 41–45 of 45 items', $overflow_page );
 		$this->assertSame( 5, $this->table_row_count( $overflow_page ) );
 	}
 
@@ -210,32 +210,32 @@ final class InventoryPaginationTest extends WP_UnitTestCase {
 	public function test_numbered_navigation_boundaries_and_empty_state(): void {
 		$middle = $this->render_navigation( 25, 50, 1000 );
 		$this->assertSame( 2, substr_count( $middle, 'term-steward-page-ellipsis' ) );
-		foreach ( array( '24ページへ', '25ページ目', '26ページへ', '最初のページへ', '最後のページへ' ) as $label ) {
+		foreach ( array( 'Go to page 24', 'Page 25', 'Go to page 26', 'Go to the first page', 'Go to the last page' ) as $label ) {
 			$this->assertStringContainsString( $label, $middle );
 		}
-		$this->assertStringNotContainsString( 'aria-label="23ページへ"', $middle );
+		$this->assertStringNotContainsString( 'aria-label="Go to page 23"', $middle );
 		$this->assertStringContainsString( 'aria-current="page"', $middle );
 		$this->assertSame( 1, preg_match( '/<span class="button tt-button tt-button--pagination term-steward-page-link term-steward-page-current"[^>]*>25<\/span>/', $middle ) );
 		$first = $this->render_navigation( 1, 50, 1000 );
 		$this->assertSame( 2, substr_count( $first, 'term-steward-page-disabled' ) );
 		$this->assertSame( 2, substr_count( $first, 'aria-disabled="true"' ) );
-		$this->assertStringContainsString( 'aria-label="3ページへ"', $first );
-		$this->assertStringNotContainsString( 'aria-label="4ページへ"', $first );
+		$this->assertStringContainsString( 'aria-label="Go to page 3"', $first );
+		$this->assertStringNotContainsString( 'aria-label="Go to page 4"', $first );
 		$third = $this->render_navigation( 3, 50, 1000 );
-		$this->assertStringContainsString( 'aria-label="4ページへ"', $third );
-		$this->assertStringNotContainsString( 'aria-label="5ページへ"', $third );
+		$this->assertStringContainsString( 'aria-label="Go to page 4"', $third );
+		$this->assertStringNotContainsString( 'aria-label="Go to page 5"', $third );
 		$near_last = $this->render_navigation( 48, 50, 1000 );
-		$this->assertStringContainsString( 'aria-label="47ページへ"', $near_last );
-		$this->assertStringContainsString( 'aria-label="49ページへ"', $near_last );
+		$this->assertStringContainsString( 'aria-label="Go to page 47"', $near_last );
+		$this->assertStringContainsString( 'aria-label="Go to page 49"', $near_last );
 		$last = $this->render_navigation( 50, 50, 1000 );
 		$this->assertSame( 2, substr_count( $last, 'term-steward-page-disabled' ) );
-		$this->assertStringContainsString( 'aria-label="48ページへ"', $last );
+		$this->assertStringContainsString( 'aria-label="Go to page 48"', $last );
 		$single = $this->render_navigation( 1, 1, 12 );
 		$this->assertStringNotContainsString( 'term-steward-pagination', $single );
-		$this->assertStringContainsString( '全12件中 1〜12件を表示', $single );
+		$this->assertStringContainsString( 'Showing 1–12 of 12 items', $single );
 		$empty = $this->render_navigation( 1, 0, 0 );
-		$this->assertStringContainsString( '該当する項目はありません', $empty );
-		$this->assertStringNotContainsString( '全0件中 1〜0件', $empty );
+		$this->assertStringContainsString( 'No matching items', $empty );
+		$this->assertStringNotContainsString( 'Showing 1–0 of 0 items', $empty );
 	}
 
 	/**

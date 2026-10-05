@@ -7,7 +7,7 @@ test('E2E-001 / MT-003：管理画面の基本表示', async ({ page }) => {
   await taxonomy.open();
 
   const tabs = page.locator('.nav-tab-wrapper');
-  for (const tab of ['カテゴリー', 'タグ', '操作計画', '操作履歴']) {
+  for (const tab of ['Category', 'Tag', 'Operation plan', 'Operation history']) {
     await expect(tabs.getByRole('link', { name: new RegExp(`^${tab}`) })).toBeVisible();
   }
   await expect(page.getByRole('dialog')).toHaveCount(0);
@@ -35,13 +35,13 @@ test('E2E-003 / MT-025：入力検証', async ({ page }) => {
   await taxonomy.open();
   await taxonomy.toggleActions();
   await taxonomy.addToPlan();
-  await expect(page.getByRole('alert').filter({ hasText: '処理するカテゴリーまたはタグを選択してください' })).toBeVisible();
+  await expect(page.getByRole('alert').filter({ hasText: 'Select a category or tag to process' })).toBeVisible();
 
   await taxonomy.selectTerm('E2E-CAT-RENAME');
-  await taxonomy.chooseAction('名称変更');
+  await taxonomy.chooseAction('Rename');
   await taxonomy.enterName('');
   await taxonomy.addToPlan();
-  await expect(page.getByLabel('新しい名前')).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.getByLabel('New name')).toHaveAttribute('aria-invalid', 'true');
 
   const state = readE2EState();
   expect(state.terms.cat_rename.name).toBe('E2E-CAT-RENAME');

@@ -113,7 +113,7 @@ final class PlanBoard {
 				$this->verify_draft_item( $user_id, $taxonomy, $request );
 				$index = $this->item_index( $request );
 				$this->workflow->remove( $user_id, $taxonomy, $index );
-				$state['notice'] = __( '操作計画から削除しました。', 'term-steward' );
+				$state['notice'] = __( 'Removed from the operation plan.', 'term-steward' );
 			} elseif ( 'discard_all' === $command ) {
 				$this->require_no_running( $user_id );
 				if ( '1' !== (string) ( $request['confirmed'] ?? '' ) ) {
@@ -126,7 +126,7 @@ final class PlanBoard {
 						$this->workflow->discard( $user_id, $taxonomy );
 					}
 				}
-				$state['notice'] = __( '操作計画を破棄しました。', 'term-steward' );
+				$state['notice'] = __( 'Discarded the operation plan.', 'term-steward' );
 			} else {
 				$state['errors'][] = PlanErrorCode::PLAN_INVALID;
 			}
@@ -338,7 +338,7 @@ final class PlanBoard {
 		$state['modal'] = ! $interrupted && $this->has_running( $results );
 		if ( $interrupted && $this->has_running( $results ) ) {
 			$state['notice_type'] = 'warning';
-			$state['notice']      = __( '処理を中断しました。操作計画から再開してください。', 'term-steward' );
+			$state['notice']      = __( 'Processing was interrupted. Resume it from the operation plan.', 'term-steward' );
 			return;
 		}
 		if ( $state['modal'] || array() === $results ) {
@@ -353,8 +353,8 @@ final class PlanBoard {
 		}
 		$state['notice_type'] = $failed ? 'warning' : 'success';
 		$state['notice']      = $failed
-			? ( $succeeded ? __( '一部の処理に失敗しました。操作履歴を確認してください。', 'term-steward' ) : __( '処理に失敗しました。操作履歴を確認してください。', 'term-steward' ) )
-			: __( '処理が完了しました。', 'term-steward' );
+			? ( $succeeded ? __( 'Some items failed. Check the operation history.', 'term-steward' ) : __( 'Processing failed. Check the operation history.', 'term-steward' ) )
+			: __( 'Processing completed.', 'term-steward' );
 	}
 
 	/**
@@ -434,19 +434,19 @@ final class PlanBoard {
 		}
 		?>
 		<div id="term-steward-board-content">
-		<h2><?php echo esc_html__( '操作計画', 'term-steward' ); ?></h2>
+		<h2><?php echo esc_html__( 'Operation plan', 'term-steward' ); ?></h2>
 		<?php if ( array() !== $state['errors'] ) : ?>
 			<div class="notice notice-error inline term-steward-plan-notice" role="alert"><p><?php echo esc_html( array() !== (array) ( $state['error_messages'] ?? array() ) ? implode( ' ', $state['error_messages'] ) : implode( ' ', array_map( array( $this, 'error_label' ), $state['errors'] ) ) ); ?></p></div>
 		<?php elseif ( is_string( $state['notice'] ) ) : ?>
 			<div class="notice notice-<?php echo esc_attr( 'warning' === ( $state['notice_type'] ?? 'success' ) ? 'warning' : 'success' ); ?> inline term-steward-plan-notice" role="status"><p><?php echo esc_html( $state['notice'] ); ?></p></div>
 		<?php endif; ?>
 		<?php if ( array() !== (array) $state['results'] && ! $state['modal'] ) : ?>
-			<section class="term-steward-execution-summary" aria-live="polite" aria-label="<?php echo esc_attr__( '最終的な実行件数', 'term-steward' ); ?>">
+			<section class="term-steward-execution-summary" aria-live="polite" aria-label="<?php echo esc_attr__( 'Final execution totals', 'term-steward' ); ?>">
 				<?php $this->render_progress( (array) $state['results'] ); ?>
 			</section>
 		<?php endif; ?>
 		<?php if ( 0 === $count ) : ?>
-			<p><?php echo esc_html__( '操作計画はまだありません。', 'term-steward' ); ?><br><?php echo esc_html__( 'カテゴリーまたはタグを選択し、処理パネルから計画へ追加してください。', 'term-steward' ); ?></p>
+			<p><?php echo esc_html__( 'There is no operation plan yet.', 'term-steward' ); ?><br><?php echo esc_html__( 'Select categories or tags and add them from the action panel.', 'term-steward' ); ?></p>
 			<?php if ( $state['modal'] ) : ?>
 				<form id="term-steward-board-form" method="post">
 					<input type="hidden" name="<?php echo esc_attr( PlanController::NONCE_FIELD ); ?>" value="<?php echo esc_attr( wp_create_nonce( PlanController::NONCE_ACTION ) ); ?>">
@@ -472,20 +472,20 @@ final class PlanBoard {
 				}
 				?>
 				<h3><?php echo esc_html( $this->taxonomy_label( $taxonomy ) ); ?></h3>
-			<div class="term-steward-table-scroll" tabindex="0" role="region" aria-label="<?php /* translators: %s: taxonomy label. */ echo esc_attr( sprintf( __( '%sの操作計画', 'term-steward' ), $this->taxonomy_label( $taxonomy ) ) ); ?>">
-			<table class="wp-list-table widefat fixed striped term-steward-plan-table"><thead><tr><th scope="col"><?php echo esc_html__( '処理方法', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( '種別', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( '対象', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( '変更内容', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( '状態', 'term-steward' ); ?></th><th scope="col" class="term-steward-plan-table__delete"><span class="screen-reader-text"><?php echo esc_html__( '削除', 'term-steward' ); ?></span></th></tr></thead><tbody>
+			<div class="term-steward-table-scroll" tabindex="0" role="region" aria-label="<?php /* translators: %s: taxonomy label. */ echo esc_attr( sprintf( __( '%s operation plan', 'term-steward' ), $this->taxonomy_label( $taxonomy ) ) ); ?>">
+			<table class="wp-list-table widefat fixed striped term-steward-plan-table"><thead><tr><th scope="col"><?php echo esc_html__( 'Action', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( 'Type', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( 'Target', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( 'Changes', 'term-steward' ); ?></th><th scope="col"><?php echo esc_html__( 'Status', 'term-steward' ); ?></th><th scope="col" class="term-steward-plan-table__delete"><span class="screen-reader-text"><?php echo esc_html__( 'Delete', 'term-steward' ); ?></span></th></tr></thead><tbody>
 				<?php foreach ( (array) $operation['requested_data']['plan'] as $index => $item ) : ?>
 					<?php
 					$warnings     = is_array( $assessment ) ? (array) ( $assessment['items'][ $index ]['warnings'] ?? array() ) : array();
 					$status_label = Status::RUNNING->value === $operation['status']
-						? __( '処理中', 'term-steward' )
+						? __( 'Processing', 'term-steward' )
 						: ( null === $assessment || false === ( $operation['preview_current'] ?? true )
-							? __( 'エラーあり', 'term-steward' )
-							: ( array() === $warnings ? __( '実行可能', 'term-steward' ) : __( '警告あり', 'term-steward' ) ) );
+							? __( 'Has errors', 'term-steward' )
+							: ( array() === $warnings ? __( 'Ready', 'term-steward' ) : __( 'Has warnings', 'term-steward' ) ) );
 					?>
 					<tr><td><?php echo esc_html( $this->action_label( (string) $item['action'] ) ); ?></td><td><?php echo esc_html( $this->taxonomy_label( $taxonomy ) ); ?></td><td><?php echo esc_html( $this->source_names( $item ) ); ?></td><td><?php echo esc_html( $this->change_label( $item ) ); ?></td><td><?php echo esc_html( $status_label ); ?></td><td class="term-steward-plan-table__delete">
 					<?php if ( Status::DRAFT->value === $operation['status'] ) : ?>
-						<form method="post"><input type="hidden" name="<?php echo esc_attr( PlanController::NONCE_FIELD ); ?>" value="<?php echo esc_attr( wp_create_nonce( PlanController::NONCE_ACTION ) ); ?>"><input type="hidden" name="view" value="plan"><input type="hidden" name="taxonomy" value="<?php echo esc_attr( $taxonomy->value ); ?>"><input type="hidden" name="operation_id" value="<?php echo esc_attr( (string) $operation['id'] ); ?>"><input type="hidden" name="item_index" value="<?php echo esc_attr( (string) $index ); ?>"><input type="hidden" name="expected_plan_hash" value="<?php echo esc_attr( $this->plans->plan_hash( (array) $operation['requested_data']['plan'] ) ); ?>"><button class="button-link-delete term-steward-plan-delete" type="submit" name="plan_command" value="remove_item" aria-label="<?php /* translators: 1: taxonomy, 2: target term names, 3: action name. */ echo esc_attr( sprintf( __( '%1$s「%2$s」の%3$sを操作計画から削除', 'term-steward' ), $this->taxonomy_label( $taxonomy ), $this->source_names( $item ), $this->action_label( (string) $item['action'] ) ) ); ?>"><?php echo esc_html__( '削除', 'term-steward' ); ?></button></form>
+						<form method="post"><input type="hidden" name="<?php echo esc_attr( PlanController::NONCE_FIELD ); ?>" value="<?php echo esc_attr( wp_create_nonce( PlanController::NONCE_ACTION ) ); ?>"><input type="hidden" name="view" value="plan"><input type="hidden" name="taxonomy" value="<?php echo esc_attr( $taxonomy->value ); ?>"><input type="hidden" name="operation_id" value="<?php echo esc_attr( (string) $operation['id'] ); ?>"><input type="hidden" name="item_index" value="<?php echo esc_attr( (string) $index ); ?>"><input type="hidden" name="expected_plan_hash" value="<?php echo esc_attr( $this->plans->plan_hash( (array) $operation['requested_data']['plan'] ) ); ?>"><button class="button-link-delete term-steward-plan-delete" type="submit" name="plan_command" value="remove_item" aria-label="<?php /* translators: 1: taxonomy, 2: target term names, 3: action name. */ echo esc_attr( sprintf( __( 'Remove %3$s for %1$s "%2$s" from the operation plan', 'term-steward' ), $this->taxonomy_label( $taxonomy ), $this->source_names( $item ), $this->action_label( (string) $item['action'] ) ) ); ?>"><?php echo esc_html__( 'Delete', 'term-steward' ); ?></button></form>
 					<?php endif; ?>
 				</td></tr>
 				<?php endforeach; ?>
@@ -495,15 +495,15 @@ final class PlanBoard {
 			<form id="term-steward-board-form" method="post">
 				<input type="hidden" name="<?php echo esc_attr( PlanController::NONCE_FIELD ); ?>" value="<?php echo esc_attr( wp_create_nonce( PlanController::NONCE_ACTION ) ); ?>">
 				<input type="hidden" name="view" value="plan">
-				<div class="term-steward-board-actions"><button type="submit" class="button-link-delete term-steward-discard" name="plan_command" value="discard_all" data-confirm="<?php echo esc_attr__( '編集中の操作計画をすべて破棄しますか？', 'term-steward' ); ?>" <?php disabled( $this->has_running( $operations ) ); ?>><?php echo esc_html__( '計画をすべて破棄', 'term-steward' ); ?></button><input type="hidden" name="confirmed" value="0">
+				<div class="term-steward-board-actions"><button type="submit" class="button-link-delete term-steward-discard" name="plan_command" value="discard_all" data-confirm="<?php echo esc_attr__( 'Discard all operation plans being edited?', 'term-steward' ); ?>" <?php disabled( $this->has_running( $operations ) ); ?>><?php echo esc_html__( 'Discard all plans', 'term-steward' ); ?></button><input type="hidden" name="confirmed" value="0">
 				<?php if ( $this->has_running( $operations ) ) : ?>
 					<?php
 					foreach ( $operations as $taxonomy => $operation ) :
 						?>
 						<input type="hidden" name="operation_ids[<?php echo esc_attr( $taxonomy ); ?>]" value="<?php echo esc_attr( (string) $operation['id'] ); ?>"><?php endforeach; ?>
-					<button type="submit" class="button button-primary tt-button tt-button--primary" name="plan_command" value="continue_all"><?php echo esc_html__( '処理を再開', 'term-steward' ); ?></button>
+					<button type="submit" class="button button-primary tt-button tt-button--primary" name="plan_command" value="continue_all"><?php echo esc_html__( 'Resume processing', 'term-steward' ); ?></button>
 				<?php else : ?>
-					<button type="submit" class="button button-primary tt-button tt-button--primary" name="plan_command" value="preview_all"><?php echo esc_html__( '変更内容を確認', 'term-steward' ); ?></button>
+					<button type="submit" class="button button-primary tt-button tt-button--primary" name="plan_command" value="preview_all"><?php echo esc_html__( 'Review changes', 'term-steward' ); ?></button>
 				<?php endif; ?></div>
 			</form>
 		<?php endif; ?>
@@ -525,7 +525,7 @@ final class PlanBoard {
 		?>
 		<div class="term-steward term-steward-modal term-steward-board-modal" data-auto-open="1" data-running="<?php echo $this->has_running( $results ) ? '1' : '0'; ?>" hidden>
 			<div class="term-steward-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="term-steward-preview-heading" tabindex="-1">
-				<header class="term-steward-modal__header"><h2 id="term-steward-preview-heading"><?php echo esc_html( $active ? __( '実行結果', 'term-steward' ) : __( '変更内容のプレビュー', 'term-steward' ) ); ?></h2><button type="button" class="term-steward-modal__close" aria-label="<?php echo esc_attr__( '閉じる', 'term-steward' ); ?>" <?php disabled( $this->has_running( $results ) ); ?>>&times;</button></header>
+				<header class="term-steward-modal__header"><h2 id="term-steward-preview-heading"><?php echo esc_html( $active ? __( 'Execution result', 'term-steward' ) : __( 'Change preview', 'term-steward' ) ); ?></h2><button type="button" class="term-steward-modal__close" aria-label="<?php echo esc_attr__( 'Close', 'term-steward' ); ?>" <?php disabled( $this->has_running( $results ) ); ?>>&times;</button></header>
 				<div class="term-steward-modal__body" aria-live="polite">
 					<?php if ( $active ) : ?>
 						<?php $this->render_results( $results ); ?>
@@ -533,14 +533,14 @@ final class PlanBoard {
 						<?php $this->render_previews( (array) $state['operations'] ); ?>
 					<?php endif; ?>
 				</div>
-				<footer class="term-steward-modal__footer"><button type="button" class="button tt-button tt-button--secondary term-steward-modal__cancel" <?php disabled( $this->has_running( $results ) ); ?>><?php echo esc_html__( 'キャンセル', 'term-steward' ); ?></button>
+				<footer class="term-steward-modal__footer"><button type="button" class="button tt-button tt-button--secondary term-steward-modal__cancel" <?php disabled( $this->has_running( $results ) ); ?>><?php echo esc_html__( 'Cancel', 'term-steward' ); ?></button>
 				<?php if ( $active ) : ?>
 					<?php
 					foreach ( $results as $taxonomy => $operation ) :
 						?>
 						<input type="hidden" form="term-steward-board-form" name="operation_ids[<?php echo esc_attr( $taxonomy ); ?>]" value="<?php echo esc_attr( (string) $operation['id'] ); ?>"><?php endforeach; ?>
 				<?php else : ?>
-					<button type="submit" form="term-steward-board-form" class="button button-primary tt-button tt-button--primary" name="plan_command" value="run_all" <?php disabled( array() !== $state['errors'] || $this->has_draft( (array) $state['operations'] ) || $this->has_running( (array) $state['operations'] ) || $this->has_stale_preview( (array) $state['operations'] ) ); ?>><?php echo esc_html__( '実行', 'term-steward' ); ?></button>
+					<button type="submit" form="term-steward-board-form" class="button button-primary tt-button tt-button--primary" name="plan_command" value="run_all" <?php disabled( array() !== $state['errors'] || $this->has_draft( (array) $state['operations'] ) || $this->has_running( (array) $state['operations'] ) || $this->has_stale_preview( (array) $state['operations'] ) ); ?>><?php echo esc_html__( 'Execute', 'term-steward' ); ?></button>
 				<?php endif; ?>
 				</footer>
 			</div>
@@ -563,7 +563,7 @@ final class PlanBoard {
 			}
 		}
 		?>
-		<p><?php /* translators: %d: number of planned actions. */ echo esc_html( sprintf( __( '処理件数：%d件', 'term-steward' ), $count ) ); ?></p>
+		<p><?php /* translators: %d: number of planned actions. */ echo esc_html( sprintf( __( 'Actions: %d', 'term-steward' ), $count ) ); ?></p>
 		<?php
 		foreach ( self::TAXONOMIES as $taxonomy ) {
 			$operation = $operations[ $taxonomy->value ] ?? null;
@@ -583,7 +583,7 @@ final class PlanBoard {
 			?>
 			<h3><?php echo esc_html( $this->taxonomy_label( $taxonomy ) ); ?></h3>
 			<?php if ( array() !== $delete_sources ) : ?>
-				<article class="term-steward-preview-item term-steward-preview-delete"><h4><?php /* translators: %s: taxonomy label. */ echo esc_html( sprintf( __( '%sを削除', 'term-steward' ), $this->taxonomy_label( $taxonomy ) ) ); ?></h4><p><?php /* translators: %d: number of terms to delete. */ echo esc_html( sprintf( __( '削除対象：%d件', 'term-steward' ), count( $delete_sources ) ) ); ?></p><ul class="term-steward-preview-delete__targets">
+				<article class="term-steward-preview-item term-steward-preview-delete"><h4><?php /* translators: %s: taxonomy label. */ echo esc_html( sprintf( __( 'Delete %s', 'term-steward' ), $this->taxonomy_label( $taxonomy ) ) ); ?></h4><p><?php /* translators: %d: number of terms to delete. */ echo esc_html( sprintf( __( 'Terms to delete: %d', 'term-steward' ), count( $delete_sources ) ) ); ?></p><ul class="term-steward-preview-delete__targets">
 				<?php foreach ( $delete_sources as $source ) : ?>
 					<li><?php echo esc_html( (string) ( $source['name'] ?? '' ) ); ?></li>
 				<?php endforeach; ?>
@@ -593,14 +593,14 @@ final class PlanBoard {
 				<?php if ( Action::DELETE->value === ( $item['action'] ?? '' ) ) : ?>
 					<?php continue; ?>
 				<?php endif; ?>
-				<article class="term-steward-preview-item"><h4><?php echo esc_html( $this->action_label( (string) $item['action'] ) ); ?></h4><p><?php echo esc_html( implode( '、', array_column( (array) $item['sources'], 'name' ) ) ); ?> → <?php echo esc_html( $this->change_label( $item ) ); ?></p><p><?php /* translators: %d: affected published post count. */ echo esc_html( sprintf( __( '影響を受ける公開済み投稿：%d件', 'term-steward' ), count( (array) $item['affected_posts'] ) ) ); ?></p>
+				<article class="term-steward-preview-item"><h4><?php echo esc_html( $this->action_label( (string) $item['action'] ) ); ?></h4><p><?php echo esc_html( implode( '、', array_column( (array) $item['sources'], 'name' ) ) ); ?> → <?php echo esc_html( $this->change_label( $item ) ); ?></p><p><?php /* translators: %d: affected published post count. */ echo esc_html( sprintf( __( 'Affected published posts: %d', 'term-steward' ), count( (array) $item['affected_posts'] ) ) ); ?></p>
 				<?php
 				foreach ( (array) $item['sources'] as $source ) :
 					?>
 					<?php
 					if ( Action::RENAME->value !== $item['action'] ) :
 						?>
-					<p><?php echo esc_html( (string) $source['name'] ); ?>：<?php echo esc_html( $source['delete_source'] ? __( '処理後に削除', 'term-steward' ) : __( '削除せず保持', 'term-steward' ) ); ?></p><?php endif; ?><?php endforeach; ?>
+					<p><?php echo esc_html( (string) $source['name'] ); ?>：<?php echo esc_html( $source['delete_source'] ? __( 'Delete after processing', 'term-steward' ) : __( 'Retain without deleting', 'term-steward' ) ); ?></p><?php endif; ?><?php endforeach; ?>
 				<?php
 				if ( array() !== (array) $item['warnings'] ) :
 					?>
@@ -608,7 +608,7 @@ final class PlanBoard {
 				<?php
 				if ( array() !== (array) $item['affected_posts'] ) :
 					?>
-					<details class="term-steward-preview-posts" data-taxonomy="<?php echo esc_attr( $taxonomy->value ); ?>" data-operation="<?php echo esc_attr( (string) $operation['id'] ); ?>" data-item="<?php echo esc_attr( (string) $index ); ?>" data-error="<?php echo esc_attr__( '対象投稿を取得できませんでした。', 'term-steward' ); ?>"><summary><?php echo esc_html__( '対象投稿を確認', 'term-steward' ); ?></summary><ul></ul></details><?php endif; ?>
+					<details class="term-steward-preview-posts" data-taxonomy="<?php echo esc_attr( $taxonomy->value ); ?>" data-operation="<?php echo esc_attr( (string) $operation['id'] ); ?>" data-item="<?php echo esc_attr( (string) $index ); ?>" data-error="<?php echo esc_attr__( 'Could not retrieve the target posts.', 'term-steward' ); ?>"><summary><?php echo esc_html__( 'Review target posts', 'term-steward' ); ?></summary><ul></ul></details><?php endif; ?>
 				</article>
 			<?php endforeach; ?>
 			<?php
@@ -629,7 +629,7 @@ final class PlanBoard {
 		}
 		if ( $failed ) {
 			?>
-			<p class="term-steward-message term-steward-message--warning"><?php echo esc_html( $succeeded ? __( '一部の処理に失敗しました。成功した処理の結果は保持されています。', 'term-steward' ) : __( '処理を完了できませんでした。', 'term-steward' ) ); ?></p>
+			<p class="term-steward-message term-steward-message--warning"><?php echo esc_html( $succeeded ? __( 'Some items failed. Successful changes have been retained.', 'term-steward' ) : __( 'Processing could not be completed.', 'term-steward' ) ); ?></p>
 			<?php
 		}
 		$this->render_progress( $results );
@@ -650,10 +650,10 @@ final class PlanBoard {
 			}
 			$status = (string) $result['status'];
 			$label  = match ( $status ) {
-				Status::COMPLETED->value => __( '完了', 'term-steward' ),
-				Status::RUNNING->value => __( '処理中', 'term-steward' ),
-				Status::PARTIAL_FAILED->value => __( '一部失敗', 'term-steward' ),
-				default => __( '失敗', 'term-steward' ),
+				Status::COMPLETED->value => __( 'Completed', 'term-steward' ),
+				Status::RUNNING->value => __( 'Processing', 'term-steward' ),
+				Status::PARTIAL_FAILED->value => __( 'Partially failed', 'term-steward' ),
+				default => __( 'Failed', 'term-steward' ),
 			};
 			?>
 			<p><strong><?php echo esc_html( $this->taxonomy_label( $taxonomy ) ); ?>：</strong><?php echo esc_html( $label ); ?>
@@ -662,7 +662,7 @@ final class PlanBoard {
 				?>
 				— <?php echo esc_html( ErrorMessages::label( (string) $result['board_error'] ) ); ?><?php endif; ?></p>
 			<?php if ( is_array( $result['progress'] ?? null ) ) : ?>
-				<p><?php /* translators: 1: total, 2: completed, 3: pending, 4: failed, 5: skipped, 6: current status. */ echo esc_html( sprintf( __( '全体：%1$d件、完了：%2$d件、未処理：%3$d件、失敗：%4$d件、スキップ：%5$d件、現在の状態：%6$s', 'term-steward' ), (int) $result['progress']['total'], (int) $result['progress']['completed'], (int) $result['progress']['pending'], (int) $result['progress']['failed'], (int) $result['progress']['skipped'], $label ) ); ?></p>
+				<p><?php /* translators: 1: total, 2: completed, 3: pending, 4: failed, 5: skipped, 6: current status. */ echo esc_html( sprintf( __( 'Total: %1$d; completed: %2$d; pending: %3$d; failed: %4$d; skipped: %5$d; current status: %6$s', 'term-steward' ), (int) $result['progress']['total'], (int) $result['progress']['completed'], (int) $result['progress']['pending'], (int) $result['progress']['failed'], (int) $result['progress']['skipped'], $label ) ); ?></p>
 			<?php endif; ?>
 			<?php
 		}
@@ -716,7 +716,7 @@ final class PlanBoard {
 	 * @param Taxonomy $taxonomy Supported taxonomy.
 	 */
 	private function taxonomy_label( Taxonomy $taxonomy ): string {
-		return Taxonomy::CATEGORY === $taxonomy ? __( 'カテゴリー', 'term-steward' ) : __( 'タグ', 'term-steward' );
+		return Taxonomy::CATEGORY === $taxonomy ? __( 'Category', 'term-steward' ) : __( 'Tag', 'term-steward' );
 	}
 
 	/**
@@ -726,9 +726,9 @@ final class PlanBoard {
 	 */
 	private function action_label( string $action ): string {
 		return match ( $action ) {
-			Action::RENAME->value => __( '名称変更', 'term-steward' ),
-			Action::MERGE->value => __( '統合', 'term-steward' ),
-			default => __( '削除', 'term-steward' ),
+			Action::RENAME->value => __( 'Rename', 'term-steward' ),
+			Action::MERGE->value => __( 'Merge', 'term-steward' ),
+			default => __( 'Delete', 'term-steward' ),
 		};
 	}
 
@@ -744,7 +744,7 @@ final class PlanBoard {
 				$names[] = (string) $source['name'];
 			} else {
 				$term    = get_term( (int) ( $source['term_id'] ?? 0 ) );
-				$names[] = $term instanceof WP_Term ? $term->name : __( '見つからない分類', 'term-steward' );
+				$names[] = $term instanceof WP_Term ? $term->name : __( 'Missing term', 'term-steward' );
 			}
 		}
 		return implode( '、', $names );
@@ -766,9 +766,9 @@ final class PlanBoard {
 				return (string) $destination['name'];
 			}
 			$term = is_array( $destination ) ? get_term( (int) ( $destination['term_id'] ?? 0 ) ) : null;
-			return $term instanceof WP_Term ? $term->name : __( '見つからない分類', 'term-steward' );
+			return $term instanceof WP_Term ? $term->name : __( 'Missing term', 'term-steward' );
 		}
-		return __( '分類を削除', 'term-steward' );
+		return __( 'Delete term', 'term-steward' );
 	}
 
 	/**
@@ -778,9 +778,9 @@ final class PlanBoard {
 	 */
 	private function warning_label( string $warning ): string {
 		return match ( $warning ) {
-			'used_by_excluded_objects' => __( '対象外の投稿で使用中のため分類を保持します。', 'term-steward' ),
-			'has_child_categories' => __( '子カテゴリーがあるため分類を保持します。', 'term-steward' ),
-			default => __( '処理前に確認が必要です。', 'term-steward' ),
+			'used_by_excluded_objects' => __( 'The term will be retained because it is used by excluded posts.', 'term-steward' ),
+			'has_child_categories' => __( 'The term will be retained because it has child categories.', 'term-steward' ),
+			default => __( 'Review is required before processing.', 'term-steward' ),
 		};
 	}
 
@@ -791,11 +791,11 @@ final class PlanBoard {
 	 */
 	private function error_label( string $code ): string {
 		return match ( $code ) {
-			PlanErrorCode::PLAN_INVALID => __( '操作計画が変更されたか、この操作を行えない状態です。画面を更新して確認してください。', 'term-steward' ),
-			PlanErrorCode::PERMISSION_DENIED => __( 'この操作を行う権限がありません。', 'term-steward' ),
-			PlanErrorCode::INVALID_NONCE => __( '操作の有効期限が切れました。画面を更新して再試行してください。', 'term-steward' ),
-			PlanErrorCode::TAXONOMY_MISMATCH => __( '対象のカテゴリーまたはタグが正しくありません。', 'term-steward' ),
-			PlanErrorCode::UNKNOWN_ERROR => __( '操作計画を処理できませんでした。もう一度お試しください。', 'term-steward' ),
+			PlanErrorCode::PLAN_INVALID => __( 'The operation plan changed or cannot be run in its current state. Refresh the page and review it.', 'term-steward' ),
+			PlanErrorCode::PERMISSION_DENIED => __( 'You are not allowed to perform this action.', 'term-steward' ),
+			PlanErrorCode::INVALID_NONCE => __( 'This action has expired. Refresh the page and try again.', 'term-steward' ),
+			PlanErrorCode::TAXONOMY_MISMATCH => __( 'The target category or tag is invalid.', 'term-steward' ),
+			PlanErrorCode::UNKNOWN_ERROR => __( 'The operation plan could not be processed. Try again.', 'term-steward' ),
 			default => ErrorMessages::label( $code ),
 		};
 	}
@@ -806,18 +806,18 @@ final class PlanBoard {
 	 * @param ExecutionException $exception Coded failure with safe target context.
 	 */
 	private function delete_start_error( ExecutionException $exception ): string {
-		$target = '' !== (string) $exception->target_name() ? (string) $exception->target_name() : __( '対象の分類', 'term-steward' );
+		$target = '' !== (string) $exception->target_name() ? (string) $exception->target_name() : __( 'Target term', 'term-steward' );
 		$reason = match ( $exception->reason() ) {
-			'relationships_added' => __( '現在、別のオブジェクトで使用されています。', 'term-steward' ),
-			'term_missing' => __( 'すでに削除されているか、見つかりません。', 'term-steward' ),
-			'taxonomy_changed' => __( '種別が操作計画と一致しません。', 'term-steward' ),
-			'duplicate_target' => __( '操作計画へ重複して追加されています。', 'term-steward' ),
-			default => __( '現在の使用状況を確認できません。', 'term-steward' ),
+			'relationships_added' => __( 'It is currently used by another object.', 'term-steward' ),
+			'term_missing' => __( 'It has already been deleted or cannot be found.', 'term-steward' ),
+			'taxonomy_changed' => __( 'The taxonomy does not match the operation plan.', 'term-steward' ),
+			'duplicate_target' => __( 'It was added to the operation plan more than once.', 'term-steward' ),
+			default => __( 'The current usage could not be verified.', 'term-steward' ),
 		};
 		/* translators: 1: deletion target name, 2: reason deletion cannot start. */
-		$message = sprintf( __( '削除を開始できませんでした。「%1$s」は%2$s', 'term-steward' ), $target, $reason );
+		$message = sprintf( __( 'Deletion could not start. "%1$s" %2$s', 'term-steward' ), $target, $reason );
 		return ExecutionErrorCode::NO_STARTABLE_ITEMS === $exception->error_code()
-			? $message . ' ' . __( 'すべての対象を処理できないため、この操作は失敗として終了しました。操作計画を作り直し、変更内容をもう一度確認してください。', 'term-steward' )
+			? $message . ' ' . __( 'No target can be processed, so this operation ended as failed. Recreate the plan and review the changes again.', 'term-steward' )
 			: $message;
 	}
 }

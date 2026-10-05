@@ -4,8 +4,8 @@ export class PlanBoardPage {
   constructor(private readonly page: Page) {}
 
   async open(): Promise<void> {
-    await this.page.getByRole('link', { name: /^操作計画/ }).click();
-    await expect(this.page.getByRole('heading', { name: '操作計画', level: 2 })).toBeVisible();
+    await this.page.getByRole('link', { name: /^Operation plan/ }).click();
+    await expect(this.page.getByRole('heading', { name: 'Operation plan', level: 2 })).toBeVisible();
   }
 
   async expectDraft(target: string, change?: string): Promise<void> {
@@ -15,10 +15,10 @@ export class PlanBoardPage {
   }
 
   async preview(): Promise<void> {
-    await this.page.getByRole('button', { name: '変更内容を確認' }).click();
+    await this.page.getByRole('button', { name: 'Review changes' }).click();
   }
 
   async remove(target: string): Promise<void> {
-    await this.page.getByRole('button', { name: new RegExp(`${target}.*操作計画から削除`) }).click();
+    await this.page.getByRole('button', { name: new RegExp(`Remove .*${target}.* from the operation plan`) }).click();
   }
 }

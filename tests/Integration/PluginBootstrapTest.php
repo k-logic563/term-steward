@@ -16,8 +16,6 @@ use TermSteward\Lifecycle;
 use TermSteward\Plugin;
 use WP_UnitTestCase;
 
-use function TermSteward\term_steward_load_translations;
-
 /**
  * Verifies installation metadata and bootstrap hooks.
  */
@@ -34,17 +32,17 @@ final class PluginBootstrapTest extends WP_UnitTestCase {
 				'requiresWP'  => 'Requires at least',
 				'requiresPHP' => 'Requires PHP',
 				'textDomain'  => 'Text Domain',
-				'domainPath'  => 'Domain Path',
+				'description' => 'Description',
 			)
 		);
 
 		$this->assertSame( 'Term Steward', $headers['name'] );
-		$this->assertSame( '0.1.0', $headers['version'] );
+		$this->assertSame( '0.1.1', $headers['version'] );
 		$this->assertSame( '6.6', $headers['requiresWP'] );
 		$this->assertSame( '8.2', $headers['requiresPHP'] );
 		$this->assertSame( 'term-steward', $headers['textDomain'] );
-		$this->assertSame( '/languages', $headers['domainPath'] );
-		$this->assertSame( '0.1.0', TERM_STEWARD_VERSION );
+		$this->assertSame( 'Safely organize WordPress categories and tags in bulk.', $headers['description'] );
+		$this->assertSame( '0.1.1', TERM_STEWARD_VERSION );
 		$this->assertStringEndsWith( '/term-steward.php', TERM_STEWARD_PLUGIN_FILE );
 		$this->assertStringStartsWith( 'TermSteward\\', Plugin::class );
 		$this->assertFalse( defined( 'TAXONOMY_TIDY_VERSION' ) );
@@ -67,7 +65,7 @@ final class PluginBootstrapTest extends WP_UnitTestCase {
 		$this->assertSame( 'term_steward_nonce', PlanController::NONCE_FIELD );
 		$this->assertSame( 'term_steward_undo', HistoryPage::NONCE_ACTION );
 		$this->assertSame( 'term_steward_undo_nonce', HistoryPage::NONCE_FIELD );
-		$this->assertSame( 10, has_action( 'init', 'TermSteward\\term_steward_load_translations' ) );
+		$this->assertFalse( has_action( 'init', 'TermSteward\\term_steward_load_translations' ) );
 		$this->assertFalse( has_action( 'init', 'TaxonomyTidy\\load_translations' ) );
 	}
 
